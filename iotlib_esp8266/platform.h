@@ -1,0 +1,1 @@
+// ESP8266 platform specific defines

@@ -1,0 +1,6 @@
+.vs/
+build/
+install/
+docs/
+.idea/
+cmake-build-debug/
