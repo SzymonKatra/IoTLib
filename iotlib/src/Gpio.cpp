@@ -1,6 +1,6 @@
 #include "iotlib/Gpio.hpp"
 
-#include "iotlib/Platform/PlatformGpio.hpp>
+#include "iotlib/Platform/PlatformGpio.hpp"
 
 
 namespace iotlib {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iotlib/PlatformDefinitions.hpp>
+#include <iotlib/Platform/PlatformDefinitions.hpp>
 
 namespace app {
     const iotlib::GpioPinDefinition LedA = iotlib::platform::mock::Pin3;

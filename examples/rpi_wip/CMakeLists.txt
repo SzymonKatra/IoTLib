@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
-set(PROJECT_NAME Mock-WIP)
+set(PROJECT_NAME RPI-WIP)
 set(OUTPUT_DEBUG Debug/bin)
 set(OUTPUT_RELEASE Release/bin)
 
@@ -34,13 +34,13 @@ endif(NOT MSVC)
 
 include_directories(app)
 include_directories(iotlib/include)
-include_directories(iotlib_mock/include)
+include_directories(iotlib_rpi/include)
 
 file(GLOB_RECURSE SRC_FILES
     iotlib/*.hpp
     iotlib/*.cpp
-    iotlib_mock/*.hpp
-    iotlib_mock/*.cpp
+    iotlib_rpi/*.hpp
+    iotlib_rpi/*.cpp
 )
 
 add_executable(${PROJECT_NAME}
