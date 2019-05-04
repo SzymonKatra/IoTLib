@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iotlib/IoTLib.hpp>
+#include <iotlib/Platform/PlatformDefinitions.hpp>
 
 namespace iotlib {
     namespace platform {

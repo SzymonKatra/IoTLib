@@ -4,7 +4,7 @@
 
 namespace iotlib {
     namespace platform {
-        void gpio_setup_in(iotlib::GpioPinDefinition pin) {
+        void gpioSetupIn(iotlib::GpioPinDefinition pin) {
             gpio_config_t io_conf;
             io_conf.intr_type = GPIO_INTR_DISABLE;
             io_conf.mode = GPIO_MODE_INPUT;
@@ -14,7 +14,7 @@ namespace iotlib {
             gpio_config(&io_conf);
         }
 
-        void gpio_setup_out(iotlib::GpioPinDefinition pin) {
+        void gpioSetupOut(iotlib::GpioPinDefinition pin) {
             gpio_config_t io_conf;
             io_conf.intr_type = GPIO_INTR_DISABLE;
             io_conf.mode = GPIO_MODE_OUTPUT;
@@ -24,16 +24,16 @@ namespace iotlib {
             gpio_config(&io_conf);
         }
 
-        void gpio_write_high(iotlib::GpioPinDefinition pin) {
+        void gpioWriteHigh(iotlib::GpioPinDefinition pin) {
             gpio_set_level(pin, 1);
         }
 
-        void gpio_write_low(iotlib::GpioPinDefinition pin) {
+        void gpioWriteLow(iotlib::GpioPinDefinition pin) {
             gpio_set_level(pin, 0);
         }
 
-        bool gpio_read(iotlib::GpioPinDefinition pin) {
-            return true;
+        bool gpioRead(iotlib::GpioPinDefinition pin) {
+            return gpio_get_level(pin) > 0;
         }
     }
 }
