@@ -34,16 +34,20 @@ if(NOT MSVC)
    endif()
 endif(NOT MSVC)
 
+include_directories(app)
+include_directories(iotlib/include)
+include_directories(iotlib_mock/include)
+
 file(GLOB_RECURSE SRC_FILES
-    iotlib/*.h
-    iotlib/*.c
-    iotlib_mock/*.h
-    iotlib_mock/*.c
+    iotlib/*.hpp
+    iotlib/*.cpp
+    iotlib_mock/*.hpp
+    iotlib_mock/*.cpp
 )
 
 add_executable(${PROJECT_NAME}
         ${SRC_FILES}
-        main.c
-        )
+        app/main.cpp
+        app/IotLib_Config.hpp)
 
 target_link_libraries(${PROJECT_NAME})
