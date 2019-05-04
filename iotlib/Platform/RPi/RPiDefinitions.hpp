@@ -1,6 +1,3 @@
-#pragma once
-
-// Raspberry Pi platform specific defines
 
 namespace iotlib {
     namespace platform {

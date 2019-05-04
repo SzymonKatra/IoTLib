@@ -16,7 +16,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OUTPUT_DEBUG}")
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OUTPUT_DEBUG}")
   set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OUTPUT_DEBUG}")
-  add_definitions(-DDEBUG_AUTOSTART)
 else()
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OUTPUT_REL}")
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OUTPUT_REL}")
@@ -24,6 +23,7 @@ else()
 endif()
 
 set (CMAKE_CXX_STANDARD 11)
+add_definitions(-DIOTLIB_MOCK)
 
 if(NOT MSVC)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -33,14 +33,10 @@ if(NOT MSVC)
 endif(NOT MSVC)
 
 include_directories(app)
-include_directories(iotlib/include)
-include_directories(iotlib_mock/include)
+include_directories(.)
 
 file(GLOB_RECURSE SRC_FILES
-    iotlib/*.hpp
     iotlib/*.cpp
-    iotlib_mock/*.hpp
-    iotlib_mock/*.cpp
 )
 
 add_executable(${PROJECT_NAME}

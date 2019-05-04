@@ -1,2 +1,3 @@
-COMPONENT_ADD_INCLUDEDIRS := ../iotlib/include ../iotlib_esp8266/include
-COMPONENT_SRCDIRS := . ../iotlib/src ../iotlib_esp8266/src ../iotlib_esp8266/src/platform
+COMPONENT_ADD_INCLUDEDIRS := ../
+COMPONENT_SRCDIRS := . ../iotlib ../iotlib/Platform
+CPPFLAGS += -DIOTLIB_ESP8266

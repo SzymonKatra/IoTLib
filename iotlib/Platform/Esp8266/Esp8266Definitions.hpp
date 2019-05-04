@@ -1,7 +1,3 @@
-#pragma once
-
-// ESP8266 platform specific defines
-
 #include <driver/gpio.h>
 
 namespace iotlib {

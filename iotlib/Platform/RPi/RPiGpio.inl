@@ -1,5 +1,3 @@
-#include <iotlib/Platform/PlatformGpio.hpp>
-
 #include <string>
 #include <fstream>
 

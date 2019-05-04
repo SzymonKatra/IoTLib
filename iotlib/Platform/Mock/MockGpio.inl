@@ -1,5 +1,3 @@
-#include <iotlib/platform/gpio.hpp>
-
 #include <iostream>
 
 namespace iotlib {

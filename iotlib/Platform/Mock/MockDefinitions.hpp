@@ -1,6 +1,3 @@
-#pragma once
-
-// Mock platform specific defines
 
 namespace iotlib {
     namespace platform {
