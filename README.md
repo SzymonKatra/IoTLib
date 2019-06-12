@@ -25,7 +25,7 @@ Wymagania:
 
 ## Bibliografia 
 
-1. Microchip Technology Inc., Hardware Abstraction Layer - http://ww1.microchip.com/downloads/en/DeviceDoc/hardware-abstraction-layer.pdf
+- Microchip Technology Inc., Hardware Abstraction Layer - http://ww1.microchip.com/downloads/en/DeviceDoc/hardware-abstraction-layer.pdf
 - Jacob Beningo, 10 Tips for designing a HAL - https://www.edn.com/electronics-blogs/embedded-basics/4439613/10-Tips-for-designing-a-HAL
 - Łukasz Krzak, Hardware abstraction layer for microcontrollers - http://home.agh.edu.pl/~lkrzak/hal/hal_idea.pdf
 - Espressif, ESP8266 Technical Reference - https://www.espressif.com/sites/default/files/documentation/esp8266-technical_reference_en.pdf
