@@ -23,7 +23,7 @@ else()
 endif()
 
 set (CMAKE_CXX_STANDARD 11)
-add_definitions(-DIOTLIB_MOCK)
+add_definitions(-DIOTLIB_RPI)
 
 if(NOT MSVC)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
