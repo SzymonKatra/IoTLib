@@ -6,6 +6,7 @@
 ### Raspberry Pi
 Wymagania:
 - gcc, make, cmake
+
 1. Sklonować repozytorium
 2. Przejść do katalogu `examples/rpi_wip/`
 3. Uruchomić skrypt konfigurujący project `configure.sh`
