@@ -1,7 +1,7 @@
 #pragma once
 
-#include <iotlib/Platform/PlatformDefinitions.hpp>
+#include <iotlib/Definitions.hpp>
 
 namespace app {
-    const iotlib::GpioPinDefinition LedA = iotlib::platform::esp8266::GPIO2;
+    const iotlib::GpioPinDefinition LedA = iotlib::esp8266::GPIO2;
 }

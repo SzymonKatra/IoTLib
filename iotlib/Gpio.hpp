@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Platform/PlatformDefinitions.hpp"
+#include "Definitions.hpp"
 
 namespace iotlib {
     class Gpio {
