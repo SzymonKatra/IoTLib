@@ -1,8 +1,8 @@
 #pragma once
 
-#include <iotlib/Platform/PlatformDefinitions.hpp>
+#include <iotlib/Definitions.hpp>
 
 namespace app {
-    const iotlib::GpioPinDefinition LedA = iotlib::platform::mock::Pin3;
-    const iotlib::GpioPinDefinition LedB = iotlib::platform::mock::Pin5;
+    const iotlib::GpioPinDefinition LedA = iotlib::mock::Pin3;
+    const iotlib::GpioPinDefinition LedB = iotlib::mock::Pin5;
 }

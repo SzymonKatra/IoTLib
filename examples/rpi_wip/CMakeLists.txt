@@ -35,8 +35,9 @@ endif(NOT MSVC)
 include_directories(app)
 include_directories(.)
 
-file(GLOB_RECURSE SRC_FILES
+file(GLOB SRC_FILES
     iotlib/*.cpp
+    iotlib/Platform/RPi/*.cpp
 )
 
 add_executable(${PROJECT_NAME}

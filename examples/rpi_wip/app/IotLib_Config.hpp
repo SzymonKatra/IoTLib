@@ -1,8 +1,8 @@
 #pragma once
 
-#include <iotlib/Platform/PlatformDefinitions.hpp>
+#include <iotlib/Definitions.hpp>
 
 namespace app {
-    const iotlib::GpioPinDefinition LedA = iotlib::platform::rpi::GPIO21;
-    const iotlib::GpioPinDefinition LedB = iotlib::platform::rpi::GPIO22;
+    const iotlib::GpioPinDefinition LedA = iotlib::rpi::GPIO21;
+    const iotlib::GpioPinDefinition LedB = iotlib::rpi::GPIO22;
 }

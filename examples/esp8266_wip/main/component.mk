@@ -1,3 +1,3 @@
 COMPONENT_ADD_INCLUDEDIRS := ../
-COMPONENT_SRCDIRS := . ../iotlib ../iotlib/Platform
+COMPONENT_SRCDIRS := . ../iotlib ../iotlib/Platform/Esp8266
 CPPFLAGS += -DIOTLIB_ESP8266
