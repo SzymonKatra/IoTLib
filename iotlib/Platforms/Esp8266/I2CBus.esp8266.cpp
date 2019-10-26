@@ -1,6 +1,6 @@
 #include <driver/i2c.h>
-#include "../../I2CBus.hpp"
 #include "Definitions.esp8266.hpp"
+#include "I2CBus.esp8266.hpp"
 
 namespace iotlib
 {
@@ -26,13 +26,13 @@ namespace iotlib
     void I2CBus::write(uint8_t address, const uint8_t* data, size_t length, bool checkAck)
     {
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-        
+
         i2c_master_start(cmd);
         i2c_master_write_byte(cmd, address << 1, checkAck);
         i2c_master_write(cmd, (uint8_t*)data, length, checkAck);
         i2c_master_stop(cmd);
         i2c_master_cmd_begin(this->bus, cmd, 0);
-        
+
         i2c_cmd_link_delete(cmd);
     }
 
@@ -45,25 +45,30 @@ namespace iotlib
         i2c_master_read(cmd, data, length, I2C_MASTER_LAST_NACK);
         i2c_master_stop(cmd);
         i2c_master_cmd_begin(this->bus, cmd, 0);
-        
+
         i2c_cmd_link_delete(cmd);
     }
 
     void I2CBus::beginWrite(uint8_t address, bool checkAck)
     {
-        this->platformState = i2c_cmd_link_create();
+        this->currentWriteCheckAck = checkAck;
 
-        i2c_master_start(this->platformState);
-        i2c_master_write_byte(this->platformState, address << 1, checkAck);
+        this->currentWriteCmd = i2c_cmd_link_create();
+
+        i2c_master_start(this->currentWriteCmd);
+        i2c_master_write_byte(this->currentWriteCmd, address << 1, checkAck);
     }
 
     void I2CBus::write(const uint8_t* data, size_t length)
     {
-        i2c_master_write(this->platformState, (uint8_t*), length)
+        i2c_master_write(this->currentWriteCmd, (uint8_t*)data, length, this->currentWriteCheckAck);
     }
 
     void I2CBus::endWrite()
     {
-
+        i2c_master_stop(this->currentWriteCmd);
+        i2c_master_cmd_begin(this->bus, this->currentWriteCmd, 0);
+        i2c_cmd_link_delete(this->currentWriteCmd);
+        this->currentWriteCmd = NULL;
     }
 }

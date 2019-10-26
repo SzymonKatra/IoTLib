@@ -51,33 +51,3 @@ namespace iotlib
 
     typedef esp8266::UARTPortDefinition UARTPortDefinition;
 }
-
-namespace iotlib
-{
-    namespace esp8266
-    {
-        namespace internal
-        {
-            struct UARTPortState
-            {
-                bool isUART0Swapped;
-            };
-            struct I2CBusState
-            {
-                i2c_cmd_handle_t currentWriteCmd;
-                bool currentWriteCheckAck;
-            };
-
-            const int GpioPlatformStateSize = 0;
-            const int UARTPlatformStateSize = sizeof(UARTPortState);
-            const int I2CPlatformStateSize = sizeof(I2CBusState);
-        }
-    }
-
-    namespace internal
-    {
-        const int GpioPlatformStateSize = esp8266::internal::GpioPlatformStateSize;
-        const int UARTPlatformStateSize = esp8266::internal::UARTPlatformStateSize;
-        const int I2CPlatformStateSize = esp8266::internal::I2CPlatformStateSize;
-    }
-}

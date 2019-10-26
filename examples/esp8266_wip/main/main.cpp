@@ -47,11 +47,15 @@ int8_t user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16
 int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
 {
     int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
-    uint8_t* data = (uint8_t*)malloc(len + 1);
+    bus->beginWrite(dev_id, true);
+    bus->write(&reg_addr, 1);
+    bus->write(reg_data, len);
+    bus->endWrite();
+    /*uint8_t* data = (uint8_t*)malloc(len + 1);
     *data = reg_addr;
     memcpy(data + 1, reg_data, len);
     bus->write(dev_id, data, len + 1);
-    free(data);
+    free(data);*/
     /*
      * The parameter dev_id can be used as a variable to store the I2C address of the device
      */
@@ -83,8 +87,8 @@ extern "C" {
 
         //iotlib::UARTPort serial(app::Debug, 74880, iotlib::UARTPort::Parity::None, iotlib::UARTPort::StopBits::One);
 
-        //serial.println("Hello UART from esp!\n");
-        //serial.println("And second line!\n");
+        //serial.print("Hello UART from esp!\n");
+        //serial.print("And second line!\n");
 
         bus = new iotlib::I2CBus(iotlib::esp8266::I2C_Bus0, iotlib::esp8266::I2C_SDA_GPIO4, iotlib::esp8266::I2C_SCL_GPIO5);
 
@@ -100,10 +104,17 @@ extern "C" {
         rslt = bme280_init(&dev);
         ESP_LOGI("main", "bme result: %d", rslt);
 
-        bme280_data data;
-        bme280_get_sensor_data(BME280_ALL, &data, &dev);
-        
-        ESP_LOGI("main", "bme temp hum press: %d %d %d", data.temperature, data.humidity, data.pressure);
+        rslt = bme280_set_sensor_mode(BME280_NORMAL_MODE, &dev);
+        ESP_LOGI("main", "bme set result: %d", rslt);
+
+        while (1)
+        {
+            bme280_data data;
+            bme280_get_sensor_data(BME280_ALL, &data, &dev);
+
+            ESP_LOGI("main", "bme temp hum press: %d %d %d", data.temperature, data.humidity, data.pressure);
+            vTaskDelay(2000 / portTICK_PERIOD_MS);
+        }
     }
 }
 
