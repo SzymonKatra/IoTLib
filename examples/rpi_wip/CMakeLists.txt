@@ -37,7 +37,7 @@ include_directories(.)
 
 file(GLOB SRC_FILES
     iotlib/*.cpp
-    iotlib/Platform/RPi/*.cpp
+    iotlib/Platforms/RPi/*.cpp
 )
 
 add_executable(${PROJECT_NAME}

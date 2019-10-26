@@ -1,7 +1,9 @@
 #pragma once
 
+#include <freertos/FreeRTOS.h>
 #include <driver/gpio.h>
 #include <driver/i2c.h>
+#include <driver/uart.h>
 
 namespace iotlib
 {
@@ -34,10 +36,48 @@ namespace iotlib
 
         typedef GpioPinDefinition I2CSclPinDefinition;
         const I2CSdaPinDefinition I2C_SCL_GPIO5 = GPIO_NUM_5;
+
+        typedef uart_port_t UARTPortDefinition;
+        const UARTPortDefinition UART_Port0 = UART_NUM_0;
+        const UARTPortDefinition UART_Port0Swapped = (UARTPortDefinition)(UART_NUM_0 + UART_NUM_MAX);
+        const UARTPortDefinition UART_Port1 = UART_NUM_1;
     }
 
     typedef esp8266::GpioPinDefinition GpioPinDefinition;
+
     typedef esp8266::I2CBusDefinition I2CBusDefinition;
     typedef esp8266::I2CSdaPinDefinition I2CSdaPinDefinition;
     typedef esp8266::I2CSclPinDefinition I2CSclPinDefinition;
+
+    typedef esp8266::UARTPortDefinition UARTPortDefinition;
+}
+
+namespace iotlib
+{
+    namespace esp8266
+    {
+        namespace internal
+        {
+            struct UARTPortState
+            {
+                bool isUART0Swapped;
+            };
+            struct I2CBusState
+            {
+                i2c_cmd_handle_t currentWriteCmd;
+                bool currentWriteCheckAck;
+            };
+
+            const int GpioPlatformStateSize = 0;
+            const int UARTPlatformStateSize = sizeof(UARTPortState);
+            const int I2CPlatformStateSize = sizeof(I2CBusState);
+        }
+    }
+
+    namespace internal
+    {
+        const int GpioPlatformStateSize = esp8266::internal::GpioPlatformStateSize;
+        const int UARTPlatformStateSize = esp8266::internal::UARTPlatformStateSize;
+        const int I2CPlatformStateSize = esp8266::internal::I2CPlatformStateSize;
+    }
 }

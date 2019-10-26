@@ -46,7 +46,7 @@
         "C:/esp8266_rtos/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/5.2.0/include",
         "C:/esp8266_rtos/xtensa-lx106-elf/xtensa-lx106-elf/include/c++/5.2.0"
       ],
-      "intelliSenseMode": "linux-gcc-arm"
+      "intelliSenseMode": "linux-gcc-arm",
     }
   ]
 }
