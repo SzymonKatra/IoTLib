@@ -1,4 +1,4 @@
-#include "System.esp8266.hpp"
+#include "System.rpi.hpp"
 #include <iostream>
 #include <unistd.h>
 
@@ -15,8 +15,6 @@ namespace iotlib
         do {
             res = nanosleep(&ts, &ts);
         } while (res && errno == EINTR);
-
-        return res;
     }
 
     void System::error(const char* str)

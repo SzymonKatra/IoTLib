@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iotlib/Definitions.hpp>
+#include <iotlib/IoTLib.hpp>
 
 namespace app {
     const iotlib::GpioPinDefinition LedA = iotlib::rpi::GPIO21;

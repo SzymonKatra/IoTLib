@@ -28,14 +28,14 @@ namespace iotlib
     {
         this->selectDevice(address);
 
-        write(this->fd, data, length);
+        ::write(this->fd, data, length);
     }
 
     void I2CBus::read(uint8_t address, uint8_t* data, size_t length, ReadAckMode ackMode, bool checkAddressAck)
     {
         this->selectDevice(address);
 
-        read(this->fd, data, length);
+        ::read(this->fd, data, length);
     }
 
     void I2CBus::beginWrite(uint8_t address, bool checkAck)
@@ -63,7 +63,7 @@ namespace iotlib
 
     void I2CBus::endWrite()
     {
-        write(this->fd, this->buffer, this->dataLength);
+        ::write(this->fd, this->buffer, this->dataLength);
         free(this->buffer);
     }
 
