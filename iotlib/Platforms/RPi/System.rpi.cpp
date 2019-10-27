@@ -1,10 +1,10 @@
 #include "System.rpi.hpp"
-#include <iostream>
+#include <stdio.h>
 #include <unistd.h>
 
 namespace iotlib
 {
-    void System::delay(uint32_t milliseconds)
+    void System::sleep(uint32_t milliseconds)
     {
         struct timespec ts;
         int res;
@@ -19,6 +19,6 @@ namespace iotlib
 
     void System::error(const char* str)
     {
-        std::cerr << str << std::endl;
+        fprintf(stderr, str);
     }
 }

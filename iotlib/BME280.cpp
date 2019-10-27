@@ -43,13 +43,8 @@ namespace iotlib
 
         bme280_init(&this->device); // todo: error handling
 
-        this->device.settings.osr_t = BME280_OVERSAMPLING_1X;
-        this->device.settings.osr_h = BME280_OVERSAMPLING_1X;
-        this->device.settings.osr_p = BME280_OVERSAMPLING_1X;
-        this->device.settings.filter = BME280_FILTER_COEFF_OFF;
-        this->device.settings.standby_time = BME280_STANDBY_TIME_500_MS;
-        bme280_set_sensor_settings(BME280_ALL_SETTINGS_SEL, &this->device);
-        bme280_set_sensor_mode(BME280_NORMAL_MODE, &this->device);
+        this->changeSettings(Oversampling::X1, Oversampling::X1, Oversampling::X1, FilterCoefficient::Disabled, StandbyTime::Ms20);
+        this->setMode(Mode::Normal);
     }
 
     BME280::~BME280()
@@ -57,15 +52,36 @@ namespace iotlib
         instances[this->iotlibId] = NULL;
     }
 
-    void BME280::getData(bme280_data& result)
+    void BME280::setMode(Mode mode)
     {
-        bme280_get_sensor_data(BME280_ALL, &result, &this->device);
+        bme280_set_sensor_mode((uint8_t)mode, &this->device);
+    }
+
+    void BME280::changeSettings(Oversampling temperatureOversampling, Oversampling pressureOversampling, Oversampling humidityOversampling, FilterCoefficient filterCoefficient, StandbyTime standbyTime)
+    {
+        this->device.settings.osr_t = (uint8_t)temperatureOversampling;
+        this->device.settings.osr_h = (uint8_t)humidityOversampling;
+        this->device.settings.osr_p = (uint8_t)pressureOversampling;
+        this->device.settings.filter = (uint8_t)filterCoefficient;
+        this->device.settings.standby_time = (uint8_t)standbyTime;
+        bme280_set_sensor_settings(BME280_ALL_SETTINGS_SEL, &this->device);
+    }
+
+
+    void BME280::getData(Result& result)
+    {
+        bme280_data data;
+        bme280_get_sensor_data(BME280_ALL, &data, &this->device);
+
+        result.Temperature = data.temperature;
+        result.Humidity = result.Humidity;
+        result.Pressure = result.Pressure;
     }
 
     int8_t BME280::I2CRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        this->bus.write(this->address, &reg_addr, 1, true);
-        this->bus.read(this->address, reg_data, len, I2CBus::ReadAckMode::AckButLastNack, true);
+        this->bus.write(this->address, &reg_addr, 1);
+        this->bus.read(this->address, reg_data, len);
         // todo: error handling
 
         return 0;
@@ -73,7 +89,7 @@ namespace iotlib
 
     int8_t BME280::I2CWrite(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        this->bus.beginWrite(this->address, true);
+        this->bus.beginWrite(this->address);
         this->bus.write(&reg_addr, 1);
         this->bus.write(reg_data, len);
         this->bus.endWrite();
@@ -84,7 +100,7 @@ namespace iotlib
 
     void bme280_delay_ms(uint32_t period)
     {
-        System::delay(period);
+        System::sleep(period);
     }
 
     int8_t bme280_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)

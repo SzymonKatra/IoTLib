@@ -16,11 +16,11 @@ int main()
 
     while (1)
     {
-        bme280_data data;
+        iotlib::BME280::Result data;
         bme280->getData(data);
 
-        std::cout << "bme temp hum press: " << data.temperature << " " << data.humidity << " " << data.pressure << std::endl;
-	iotlib::System::delay(2000);
+        std::cout << "bme temp hum press: " << data.Temperature << " " << data.Humidity << " " << data.Pressure << std::endl;
+        iotlib::System::sleep(2000);
     }
 
     return 0;
