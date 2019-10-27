@@ -1,9 +1,11 @@
+#include <string.h>
 #include <string>
 #include "I2CBus.rpi.hpp"
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <math.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include "../../System.hpp"
 
@@ -42,7 +44,7 @@ namespace iotlib
 
         this->bufferLength = 256;
         this->dataLength = 0;
-        this->buffer = malloc(this->bufferLength);
+        this->buffer = (uint8_t*)malloc(this->bufferLength);
     }
 
     void I2CBus::write(const uint8_t* data, size_t length)
@@ -53,7 +55,7 @@ namespace iotlib
             size_t required = this->dataLength + length;
             this->bufferLength *= 2;
             if (this->bufferLength < required) this->bufferLength = required;
-            this->buffer = realloc(this->buffer, this->bufferLength);
+            this->buffer = (uint8_t*)realloc(this->buffer, this->bufferLength);
         }
         memcpy(this->buffer + this->dataLength, data, length);
         this->dataLength += length;
