@@ -1,8 +1,6 @@
-#include <driver/i2c.h>
 #include <string>
-#include "I2CBus.esp8266.hpp"
+#include "I2CBus.rpi.hpp"
 #include <linux/i2c-dev.h>
-#include <i2c/smbus.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <math.h>
