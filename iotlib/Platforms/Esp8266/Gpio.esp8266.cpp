@@ -1,5 +1,4 @@
 #include <driver/gpio.h>
-#include "Definitions.esp8266.hpp"
 #include "Gpio.esp8266.hpp"
 
 namespace iotlib

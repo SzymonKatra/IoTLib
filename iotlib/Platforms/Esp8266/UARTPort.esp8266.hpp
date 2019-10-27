@@ -1,10 +1,20 @@
 #pragma once
 
 #include <stdint.h>
-#include "Definitions.esp8266.hpp"
 #include <driver/uart.h>
 
-namespace iotlib {
+namespace iotlib
+{
+    namespace esp8266
+    {
+        typedef uart_port_t UARTPortDefinition;
+        const UARTPortDefinition UART_Port0 = UART_NUM_0;
+        const UARTPortDefinition UART_Port0Swapped = (UARTPortDefinition)(UART_NUM_0 + UART_NUM_MAX);
+        const UARTPortDefinition UART_Port1 = UART_NUM_1;
+    }
+
+    typedef esp8266::UARTPortDefinition UARTPortDefinition;
+
     class UARTPort
     {
     public:
@@ -22,11 +32,11 @@ namespace iotlib {
         };
 
     private:
-        iotlib::UARTPortDefinition port;
+        UARTPortDefinition port;
         bool isUART0Swapped;
 
     public:
-        UARTPort(iotlib::UARTPortDefinition uartPort, uint32_t baudRate, UARTPort::Parity parity, UARTPort::StopBits stopBits);
+        UARTPort(UARTPortDefinition uartPort, uint32_t baudRate, UARTPort::Parity parity, UARTPort::StopBits stopBits);
         ~UARTPort();
 
         size_t write(const uint8_t* buffer, size_t size);

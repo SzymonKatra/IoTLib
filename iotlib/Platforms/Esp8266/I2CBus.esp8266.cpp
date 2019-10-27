@@ -1,10 +1,9 @@
 #include <driver/i2c.h>
-#include "Definitions.esp8266.hpp"
 #include "I2CBus.esp8266.hpp"
 
 namespace iotlib
 {
-    I2CBus::I2CBus(iotlib::I2CBusDefinition bus, iotlib::I2CSdaPinDefinition sdaPin, iotlib::I2CSclPinDefinition sclPin)
+    I2CBus::I2CBus(I2CBusDefinition bus, I2CSdaPinDefinition sdaPin, I2CSclPinDefinition sclPin)
     {
         this->bus = bus;
 
@@ -36,13 +35,13 @@ namespace iotlib
         i2c_cmd_link_delete(cmd);
     }
 
-    void I2CBus::read(uint8_t address, uint8_t* data, size_t length, bool checkAck)
+    void I2CBus::read(uint8_t address, uint8_t* data, size_t length, ReadAckMode ackMode, bool checkAddressAck)
     {
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
         i2c_master_start(cmd);
-        i2c_master_write_byte(cmd, (address << 1) | 1, checkAck);
-        i2c_master_read(cmd, data, length, I2C_MASTER_LAST_NACK);
+        i2c_master_write_byte(cmd, (address << 1) | 1, checkAddressAck);
+        i2c_master_read(cmd, data, length, this->convertReadAckMode(ackMode));
         i2c_master_stop(cmd);
         i2c_master_cmd_begin(this->bus, cmd, 0);
 
@@ -70,5 +69,16 @@ namespace iotlib
         i2c_master_cmd_begin(this->bus, this->currentWriteCmd, 0);
         i2c_cmd_link_delete(this->currentWriteCmd);
         this->currentWriteCmd = NULL;
+    }
+
+    i2c_ack_type_t I2CBus::convertReadAckMode(ReadAckMode ackMode)
+    {
+        switch (ackMode)
+        {
+        case ReadAckMode::Ack: return I2C_MASTER_ACK;
+        case ReadAckMode::Nack: return I2C_MASTER_NACK;
+        case ReadAckMode::AckButLastNack: return I2C_MASTER_LAST_NACK;
+        default: return I2C_MASTER_ACK_MAX;
+        }
     }
 }
