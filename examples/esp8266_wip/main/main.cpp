@@ -28,11 +28,11 @@ extern "C" {
 
         while (1)
         {
-            bme280_data data;
+            iotlib::BME280::Result data;
             bme280->getData(data);
 
-            ESP_LOGI("main", "bme temp hum press: %d %d %d", data.temperature, data.humidity, data.pressure);
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
+            ESP_LOGI("main", "bme temp hum press: %d %d %d", data.Temperature, data.Humidity, data.Pressure);
+            iotlib::System::sleep(2000);
         }
     }
 }

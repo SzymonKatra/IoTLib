@@ -24,14 +24,6 @@ namespace iotlib
     // todo: error handling
     class I2CBus
     {
-    public:
-        enum class ReadAckMode
-        {
-            Nack,
-            Ack,
-            AckButLastNack,
-        };
-
     private:
         I2CBusDefinition bus;
         int fd;
