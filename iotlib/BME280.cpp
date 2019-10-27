@@ -42,6 +42,14 @@ namespace iotlib
         this->device.delay_ms = bme280_delay_ms;
 
         bme280_init(&this->device); // todo: error handling
+
+        this->device.settings.osr_t = BME280_OVERSAMPLING_1X;
+        this->device.settings.osr_h = BME280_OVERSAMPLING_1X;
+        this->device.settings.osr_p = BME280_OVERSAMPLING_1X;
+        this->device.settings.filter = BME280_FILTER_COEFF_OFF;
+        this->device.settings.standby_time = BME280_STANDBY_TIME_500_MS;
+        bme280_set_sensor_settings(BME280_ALL_SETTINGS_SEL, &this->device);
+        bme280_set_sensor_mode(BME280_NORMAL_MODE, &this->device);
     }
 
     BME280::~BME280()
@@ -89,5 +97,61 @@ namespace iotlib
     {
         BME280* bme280 = instances[dev_id];
         return internal::BME280PrivateAccessor::I2CWrite(*bme280, reg_addr, reg_data, len);
+    }
+
+    int8_t bme280_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    {
+        BME280* bme280 = instances[dev_id];
+
+        int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
+
+        /*
+         * The parameter dev_id can be used as a variable to select which Chip Select pin has
+         * to be set low to activate the relevant device on the SPI bus
+         */
+
+         /*
+          * Data on the bus should be like
+          * |----------------+---------------------+-------------|
+          * | MOSI           | MISO                | Chip Select |
+          * |----------------+---------------------|-------------|
+          * | (don't care)   | (don't care)        | HIGH        |
+          * | (reg_addr)     | (don't care)        | LOW         |
+          * | (don't care)   | (reg_data[0])       | LOW         |
+          * | (....)         | (....)              | LOW         |
+          * | (don't care)   | (reg_data[len - 1]) | LOW         |
+          * | (don't care)   | (don't care)        | HIGH        |
+          * |----------------+---------------------|-------------|
+          */
+
+        return rslt;
+    }
+
+    int8_t bme280_spi_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    {
+        BME280* bme280 = instances[dev_id];
+
+        int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
+
+        /*
+         * The parameter dev_id can be used as a variable to select which Chip Select pin has
+         * to be set low to activate the relevant device on the SPI bus
+         */
+
+         /*
+          * Data on the bus should be like
+          * |---------------------+--------------+-------------|
+          * | MOSI                | MISO         | Chip Select |
+          * |---------------------+--------------|-------------|
+          * | (don't care)        | (don't care) | HIGH        |
+          * | (reg_addr)          | (don't care) | LOW         |
+          * | (reg_data[0])       | (don't care) | LOW         |
+          * | (....)              | (....)       | LOW         |
+          * | (reg_data[len - 1]) | (don't care) | LOW         |
+          * | (don't care)        | (don't care) | HIGH        |
+          * |---------------------+--------------|-------------|
+          */
+
+        return rslt;
     }
 }

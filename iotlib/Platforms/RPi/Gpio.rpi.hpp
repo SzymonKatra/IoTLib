@@ -1,5 +1,7 @@
 #pragma once
 
+#include <driver/gpio.h>
+
 namespace iotlib
 {
     namespace rpi
@@ -60,19 +62,20 @@ namespace iotlib
         const GpioPinDefinition GPIO51 = 51;
         const GpioPinDefinition GPIO52 = 52;
         const GpioPinDefinition GPIO53 = 53;
-
-        typedef int I2CBusDefinition;
-        const I2CBusDefinition I2C_Bus0 = 0;
-
-        typedef int I2CSdaPinDefinition;
-        const I2CSdaPinDefinition I2C_SDA_GPIO2 = 0;
-
-        typedef int I2CSclPinDefinition;
-        const I2CSdaPinDefinition I2C_SCL_GPIO3 = 0;
     }
 
     typedef rpi::GpioPinDefinition GpioPinDefinition;
-    typedef rpi::I2CBusDefinition I2CBusDefinition;
-    typedef rpi::I2CSdaPinDefinition I2CSdaPinDefinition;
-    typedef rpi::I2CSclPinDefinition I2CSclPinDefinition;
+
+    class Gpio
+    {
+    public:
+        enum class Direction {
+            Input,
+            Output
+        };
+
+        static void setup(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction);
+        static void write(iotlib::GpioPinDefinition pin, bool value);
+        static bool read(iotlib::GpioPinDefinition pin);
+    };
 }

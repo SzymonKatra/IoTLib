@@ -1,18 +1,17 @@
 #include <string>
 #include <fstream>
-#include "../../Gpio.hpp"
-#include "Definitions.rpi.hpp"
+#include "Gpio.rpi.hpp"
 
 namespace iotlib
 {
-    void Gpio::setup(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction)
+    void Gpio::setup(GpioPinDefinition pin, Direction direction)
     {
         std::ofstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/direction");
-        stream << (direction == iotlib::Gpio::Direction::Output ? "out" : "in");
+        stream << (direction == Direction::Output ? "out" : "in");
         stream.close();
     }
 
-    void Gpio::write(iotlib::GpioPinDefinition pin, bool value)
+    void Gpio::write(GpioPinDefinition pin, bool value)
     {
         std::ofstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/value");
         stream << (value ? "1" : "0");

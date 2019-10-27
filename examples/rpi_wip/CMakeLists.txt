@@ -38,6 +38,7 @@ include_directories(.)
 file(GLOB SRC_FILES
     iotlib/*.cpp
     iotlib/Platforms/RPi/*.cpp
+    iotlib/Internal/BoschSensortecBME280_driver/*.cpp
 )
 
 add_executable(${PROJECT_NAME}
