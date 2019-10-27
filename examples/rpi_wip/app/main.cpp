@@ -1,6 +1,8 @@
 #include "IotLib_Config.hpp"
 #include <iotlib/IoTLib.hpp>
 #include <iostream>
+#include <iotlib/BME280.hpp>
+#include <iotlib/System.hpp>
 
 iotlib::I2CBus* bus;
 
@@ -17,8 +19,8 @@ int main()
         bme280_data data;
         bme280->getData(data);
 
-        std::cout << "bme temp hum press: %d %d %d" << data.temperature << data.humidity << data.pressure;
-        System::delay(2000);
+        std::cout << "bme temp hum press: " << data.temperature << " " << data.humidity << " " << data.pressure << std::endl;
+	iotlib::System::delay(2000);
     }
 
     return 0;
