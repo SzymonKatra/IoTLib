@@ -1,6 +1,8 @@
 #include "IotLib_Config.hpp"
 #include <iotlib/IoTLib.hpp>
 #include <iostream>
+#include <iotlib/BME280.hpp>
+#include <iotlib/System.hpp>
 
 iotlib::I2CBus* bus;
 
