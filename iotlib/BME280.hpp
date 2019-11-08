@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include "I2CBus.hpp"
+#include "SPIBus.hpp"
+#include "Gpio.hpp"
 #include "Internal/BoschSensortecBME280_driver/bme280.h"
 
 namespace iotlib
@@ -12,8 +14,8 @@ namespace iotlib
         class BME280PrivateAccessor
         {
         public:
-            static int8_t I2CRead(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
-            static int8_t I2CWrite(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
+            static int8_t busRead(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
+            static int8_t busWrite(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
         };
     }
 
@@ -62,13 +64,16 @@ namespace iotlib
         };
 
     private:
-        I2CBus& bus;
+        I2CBus* i2cBus;
+        SPIBus* spiBus;
         uint8_t address;
         struct bme280_dev device;
         uint8_t iotlibId;
+        GpioPinDefinition csPin;
 
     public:
         BME280(I2CBus& bus, uint8_t sdo = 0);
+        BME280(SPIBus& bus, GpioPinDefinition csPin);
         ~BME280();
 
         void setMode(Mode mode);
@@ -79,7 +84,7 @@ namespace iotlib
         friend class internal::BME280PrivateAccessor;
 
     private:
-        int8_t I2CRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
-        int8_t I2CWrite(uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
+        int8_t busRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
+        int8_t busWrite(uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
     };
 }

@@ -7,23 +7,23 @@ namespace iotlib
     static BME280* instances[5];
 
     static void bme280_delay_ms(uint32_t period);
-    static int8_t bme280_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
-    static int8_t bme280_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
+    static int8_t bme280_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
+    static int8_t bme280_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len);
 
     namespace internal
     {
-        int8_t BME280PrivateAccessor::I2CRead(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+        int8_t BME280PrivateAccessor::busRead(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
         {
-            return bme280.I2CRead(reg_addr, reg_data, len);
+            return bme280.busRead(reg_addr, reg_data, len);
         }
-        int8_t BME280PrivateAccessor::I2CWrite(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+        int8_t BME280PrivateAccessor::busWrite(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
         {
-            return bme280.I2CWrite(reg_addr, reg_data, len);
+            return bme280.busWrite(reg_addr, reg_data, len);
         }
     }
 
     BME280::BME280(I2CBus& bus, uint8_t sdo)
-        : bus(bus)
+        : i2cBus(&bus), spiBus(NULL)
     {
         this->iotlibId = nextIotlibId++;
         if (nextIotlibId >= 5)
@@ -37,14 +37,42 @@ namespace iotlib
 
         this->device.dev_id = this->iotlibId;
         this->device.intf = BME280_I2C_INTF;
-        this->device.read = bme280_i2c_read;
-        this->device.write = bme280_i2c_write;
+        this->device.read = bme280_read;
+        this->device.write = bme280_write;
         this->device.delay_ms = bme280_delay_ms;
 
         bme280_init(&this->device); // todo: error handling
 
         this->changeSettings(Oversampling::X1, Oversampling::X1, Oversampling::X1, FilterCoefficient::Disabled, StandbyTime::Ms20);
         this->setMode(Mode::Normal);
+    }
+
+    BME280::BME280(SPIBus& bus, GpioPinDefinition csPin)
+        : i2cBus(NULL), spiBus(&bus), csPin(csPin)
+    {
+        this->iotlibId = nextIotlibId++;
+        if (nextIotlibId >= 5)
+        {
+            System::error("Max number of BME280 sensors reached");
+        }
+
+        instances[this->iotlibId] = this;
+
+        //address = sdo == 0 ? BME280_I2C_ADDR_PRIM : BME280_I2C_ADDR_SEC;
+
+        this->device.dev_id = this->iotlibId;
+        this->device.intf = BME280_SPI_INTF;
+        this->device.read = bme280_read;
+        this->device.write = bme280_write;
+        this->device.delay_ms = bme280_delay_ms;
+
+        bme280_init(&this->device); // todo: error handling
+
+        this->changeSettings(Oversampling::X1, Oversampling::X1, Oversampling::X1, FilterCoefficient::Disabled, StandbyTime::Ms20);
+        this->setMode(Mode::Normal);
+
+        Gpio::setup(csPin, Gpio::Direction::Output);
+        Gpio::write(csPin, true);
     }
 
     BME280::~BME280()
@@ -78,21 +106,41 @@ namespace iotlib
         result.Pressure = result.Pressure;
     }
 
-    int8_t BME280::I2CRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    int8_t BME280::busRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        this->bus.write(this->address, &reg_addr, 1);
-        this->bus.read(this->address, reg_data, len);
+        if (this->device.intf == BME280_I2C_INTF)
+        {
+            this->i2cBus->write(this->address, &reg_addr, 1);
+            this->i2cBus->read(this->address, reg_data, len);
+        }
+        else
+        {
+            Gpio::write(csPin, false);
+            this->spiBus->write(&reg_addr, 1);
+            this->spiBus->read(reg_data, len);
+            Gpio::write(csPin, true);
+        }
         // todo: error handling
 
         return 0;
     }
 
-    int8_t BME280::I2CWrite(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    int8_t BME280::busWrite(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        this->bus.beginWrite(this->address);
-        this->bus.write(&reg_addr, 1);
-        this->bus.write(reg_data, len);
-        this->bus.endWrite();
+        if (this->device.intf == BME280_I2C_INTF)
+        {
+            this->i2cBus->beginWrite(this->address);
+            this->i2cBus->write(&reg_addr, 1);
+            this->i2cBus->write(reg_data, len);
+            this->i2cBus->endWrite();
+        }
+        else
+        {
+            Gpio::write(csPin, false);
+            this->spiBus->write(&reg_addr, 1);
+            this->spiBus->write(reg_data, len);
+            Gpio::write(csPin, true);
+        }
         // todo: error handling
 
         return 0;
@@ -103,21 +151,21 @@ namespace iotlib
         System::sleep(period);
     }
 
-    int8_t bme280_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    int8_t bme280_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
         BME280* bme280 = instances[dev_id];
-        return internal::BME280PrivateAccessor::I2CRead(*bme280, reg_addr, reg_data, len);
+        return internal::BME280PrivateAccessor::busRead(*bme280, reg_addr, reg_data, len);
     }
 
-    int8_t bme280_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    int8_t bme280_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
         BME280* bme280 = instances[dev_id];
-        return internal::BME280PrivateAccessor::I2CWrite(*bme280, reg_addr, reg_data, len);
+        return internal::BME280PrivateAccessor::busWrite(*bme280, reg_addr, reg_data, len);
     }
 
     int8_t bme280_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        BME280* bme280 = instances[dev_id];
+        //BME280* bme280 = instances[dev_id];
 
         int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
 
@@ -145,7 +193,7 @@ namespace iotlib
 
     int8_t bme280_spi_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        BME280* bme280 = instances[dev_id];
+        //BME280* bme280 = instances[dev_id];
 
         int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
 

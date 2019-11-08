@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <driver/spi.h>
 
 namespace iotlib
@@ -21,5 +22,8 @@ namespace iotlib
     public:
         SPIBus(SPIBusDefinition bus);
         ~SPIBus();
+
+        void write(const uint8_t* data, size_t len);
+        void read(uint8_t* data, size_t len);
     };
 }

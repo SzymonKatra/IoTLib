@@ -17,6 +17,11 @@ namespace iotlib
         } while (res && errno == EINTR);
     }
 
+    void System::waitUs(uint32_t microseconds)
+    {
+        usleep(microseconds);
+    }
+
     void System::error(const char* str)
     {
         fprintf(stderr, str);
