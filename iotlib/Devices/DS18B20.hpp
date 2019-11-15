@@ -18,11 +18,11 @@ namespace iotlib
 
     private:
         OneWireBus& bus;
-        uint64_t address;
+        OneWireBus::Address address;
 
     public:
         DS18B20(OneWireBus& bus);
-        DS18B20(OneWireBus& bu, uint64_t address);
+        DS18B20(OneWireBus& bus, OneWireBus::Address address);
         ~DS18B20();
 
         void startConversion();

@@ -7,8 +7,37 @@ namespace iotlib
 {
     class OneWireBus
     {
+    public:
+        union Address
+        {
+            uint64_t Value;
+            struct
+            {
+                uint8_t FamilyCode : 8;
+                uint64_t SerialNumber : 48;
+                uint8_t Crc : 8;
+            };
+
+            Address();
+            Address(uint64_t value);
+
+            bool operator==(const Address& other);
+            bool operator!=(const Address& other);
+        };
+
+        static Address NoDevice;
+
+        enum class SearchType
+        {
+            SearchRom = 0xF0,
+            AlarmSearch = 0xEC
+        };
+
     private:
-        GpioPinDefinition busPin;
+        Gpio busGpio;
+        SearchType currentSearchType;
+        uint64_t lastDeviceAddress;
+        int8_t lastDiscrepancy;
 
     public:
         OneWireBus(GpioPinDefinition busPin);
@@ -43,10 +72,12 @@ namespace iotlib
             return value;
         }
 
-        size_t searchRom(uint64_t* array, size_t size);
+        void searchBegin(SearchType searchType);
+        Address searchNext();
+        size_t search(SearchType searchType, Address* result, size_t size);
+
         uint64_t readRom();
-        void matchRom(uint64_t address);
+        void matchRom(Address address);
         void skipRom();
-        size_t alarmSearch(uint64_t* array, size_t size);
     };
 }

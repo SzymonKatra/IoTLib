@@ -31,6 +31,17 @@ namespace iotlib
         {
             uart_disable_swap();
         }
+
+        if (port == esp8266::UART_Port0)
+        {
+            uart_config_t config;
+            config.baud_rate = 74880;
+            config.parity = UART_PARITY_DISABLE;
+            config.stop_bits = UART_STOP_BITS_1;
+            config.data_bits = UART_DATA_8_BITS;
+            config.flow_ctrl = UART_HW_FLOWCTRL_DISABLE;
+            uart_param_config(port, &config);
+        }
     }
 
     size_t UARTPort::write(const uint8_t* buffer, size_t size)

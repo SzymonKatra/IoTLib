@@ -69,7 +69,7 @@ namespace iotlib
         uint8_t address;
         struct bme280_dev device;
         uint8_t iotlibId;
-        GpioPinDefinition csPin;
+        Gpio csGpio;
 
     public:
         BME280(I2CBus& bus, uint8_t sdo = 0);

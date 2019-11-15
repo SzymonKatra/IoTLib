@@ -7,6 +7,7 @@ namespace iotlib
     namespace esp8266
     {
         typedef gpio_num_t GpioPinDefinition;
+        const GpioPinDefinition GPIO_NONE = GPIO_NUM_MAX;
         const GpioPinDefinition GPIO0 = GPIO_NUM_0;
         const GpioPinDefinition GPIO1 = GPIO_NUM_1;
         const GpioPinDefinition GPIO2 = GPIO_NUM_2;
@@ -37,10 +38,20 @@ namespace iotlib
             OutputOpenDrain
         };
 
-        static void setup(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction);
-        static void write(iotlib::GpioPinDefinition pin, bool value);
-        static bool read(iotlib::GpioPinDefinition pin);
+    private:
+        iotlib::GpioPinDefinition pin;
 
-        static gpio_mode_t convertDirection(Gpio::Direction direction);
+    public:
+        Gpio(iotlib::GpioPinDefinition, iotlib::Gpio::Direction direction);
+        Gpio(iotlib::GpioPinDefinition, iotlib::Gpio::Direction direction, bool initValue);
+        ~Gpio();
+
+        void write(bool value);
+        bool read();
+
+        static Gpio createDummy();
+
+    private:
+        gpio_mode_t convertDirection(Gpio::Direction direction);
     };
 }

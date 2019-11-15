@@ -16,10 +16,15 @@ namespace iotlib
 
     class Adc
     {
+    private:
+        AdcPinDefinition pin;
+        uint16_t maxMiliVolts;
+
     public:
-        Adc(AdcPinDefinition pin);
+        Adc(AdcPinDefinition pin, uint16_t maxMiliVolts);
         ~Adc();
 
-        uint16_t read();
+        uint16_t readRaw();
+        uint16_t readMilivolts();
     };
 }

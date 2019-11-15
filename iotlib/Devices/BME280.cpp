@@ -23,7 +23,7 @@ namespace iotlib
     }
 
     BME280::BME280(I2CBus& bus, uint8_t sdo)
-        : i2cBus(&bus), spiBus(NULL)
+        : i2cBus(&bus), spiBus(NULL), csGpio(Gpio::createDummy())
     {
         this->iotlibId = nextIotlibId++;
         if (nextIotlibId >= 5)
@@ -48,8 +48,10 @@ namespace iotlib
     }
 
     BME280::BME280(SPIBus& bus, GpioPinDefinition csPin)
-        : i2cBus(NULL), spiBus(&bus), csPin(csPin)
+        : i2cBus(NULL), spiBus(&bus), csGpio(csPin, Gpio::Direction::Output)
     {
+        csGpio.write(true);
+
         this->iotlibId = nextIotlibId++;
         if (nextIotlibId >= 5)
         {
@@ -70,9 +72,6 @@ namespace iotlib
 
         this->changeSettings(Oversampling::X1, Oversampling::X1, Oversampling::X1, FilterCoefficient::Disabled, StandbyTime::Ms20);
         this->setMode(Mode::Normal);
-
-        Gpio::setup(csPin, Gpio::Direction::Output);
-        Gpio::write(csPin, true);
     }
 
     BME280::~BME280()
@@ -115,10 +114,10 @@ namespace iotlib
         }
         else
         {
-            Gpio::write(csPin, false);
+            csGpio.write(false);
             this->spiBus->write(&reg_addr, 1);
             this->spiBus->read(reg_data, len);
-            Gpio::write(csPin, true);
+            csGpio.write(true);
         }
         // todo: error handling
 
@@ -136,10 +135,10 @@ namespace iotlib
         }
         else
         {
-            Gpio::write(csPin, false);
+            csGpio.write(false);
             this->spiBus->write(&reg_addr, 1);
             this->spiBus->write(reg_data, len);
-            Gpio::write(csPin, true);
+            csGpio.write(true);
         }
         // todo: error handling
 

@@ -4,21 +4,26 @@
 
 namespace iotlib
 {
-    void Gpio::setup(GpioPinDefinition pin, Direction direction)
+    Gpio::Gpio(GpioPinDefinition pin, Direction direction)
+        : pin(pin)
     {
         std::ofstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/direction");
         stream << (direction == Direction::Output ? "out" : "in");
         stream.close();
     }
 
-    void Gpio::write(GpioPinDefinition pin, bool value)
+    Gpio::~Gpio()
+    {
+    }
+
+    void Gpio::write(bool value)
     {
         std::ofstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/value");
         stream << (value ? "1" : "0");
         stream.close();
     }
 
-    bool Gpio::read(GpioPinDefinition pin)
+    bool Gpio::read()
     {
         std::string val;
         std::ifstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/value");

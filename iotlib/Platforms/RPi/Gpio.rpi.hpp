@@ -69,11 +69,18 @@ namespace iotlib
     public:
         enum class Direction {
             Input,
-            Output
+            Output,
+            OutputOpenDrain
         };
 
-        static void setup(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction);
-        static void write(iotlib::GpioPinDefinition pin, bool value);
-        static bool read(iotlib::GpioPinDefinition pin);
+    private:
+        iotlib::GpioPinDefinition pin;
+
+    public:
+        Gpio(iotlib::GpioPinDefinition, iotlib::Gpio::Direction direction);
+        ~Gpio();
+
+        void write(bool value);
+        bool read();
     };
 }
