@@ -162,12 +162,12 @@ namespace iotlib
         return devicesCount;
     }
 
-    uint64_t OneWireBus::readRom()
+    OneWireBus::Address OneWireBus::readRom()
     {
         if (!this->reset()) return 0;
 
         this->writeData<uint8_t>(0x33);
-        return this->readData<uint64_t>();
+        return Address(this->readData<uint64_t>());
     }
 
     void OneWireBus::matchRom(Address address)

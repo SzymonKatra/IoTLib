@@ -76,7 +76,7 @@ namespace iotlib
         Address searchNext();
         size_t search(SearchType searchType, Address* result, size_t size);
 
-        uint64_t readRom();
+        Address readRom();
         void matchRom(Address address);
         void skipRom();
     };
