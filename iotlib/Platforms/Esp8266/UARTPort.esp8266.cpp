@@ -1,7 +1,5 @@
-#include <freertos/FreeRTOS.h>
-#include <driver/uart.h>
-#include <string.h>
 #include "UARTPort.esp8266.hpp"
+#include <string.h>
 
 namespace iotlib
 {

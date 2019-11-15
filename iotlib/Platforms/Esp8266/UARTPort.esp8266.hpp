@@ -1,5 +1,6 @@
 #pragma once
 
+#include <freertos/FreeRTOS.h>
 #include <stdint.h>
 #include <driver/uart.h>
 
