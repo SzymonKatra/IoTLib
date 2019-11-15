@@ -7,7 +7,8 @@
 #include "IotLib_Config.hpp"
 #include <iotlib/IoTLib.hpp>
 #include <string.h>
-#include <iotlib/BME280.hpp>
+#include <iotlib/Devices/BME280.hpp>
+#include <iotlib/Devices/DS18B20.hpp>
 #include <sys/time.h>
 
 //iotlib::I2CBus* bus;
@@ -31,22 +32,22 @@ extern "C" {
         iotlib::System::sleep(1000);*/
         //iotlib::Gpio::setup(app::LedA, iotlib::Gpio::Direction::Output);
 
+        
         iotlib::OneWireBus oneWire(iotlib::esp8266::GPIO4);
+        iotlib::DS18B20 tempSensor(oneWire);
         iotlib::System::sleep(100);
-        bool status = oneWire.reset();
-        ESP_LOGI("1w", "%d", status);
-        oneWire.writeUint8(0xCC);
-        oneWire.writeUint8(0x44);
-        iotlib::System::sleep(1000);
-        oneWire.reset();
-        oneWire.writeUint8(0xCC);
-        oneWire.writeUint8(0xBE);
-        uint16_t tmp = oneWire.readUint8();
-        tmp |= ((oneWire.readUint8() & 7) << 8);
-        tmp >>= 4;
-        oneWire.reset();
+        while (1)
+        {
+            tempSensor.startConversion();
+            iotlib::System::sleep(1000);
+            int16_t tmp = tempSensor.readRawTemperature();
+            tmp >>= 4;
 
-        ESP_LOGI("tmp", "tmp: %d", tmp);
+            ESP_LOGI("tmp", "tmp: %d", tmp);
+
+            bool isParasite = iotlib::DS18B20::isAnyUsingParasitePower(oneWire);
+            ESP_LOGI("1w", "is parasite: %d", (int)isParasite);
+        }
         /*for (size_t i = 0; i < 9; i++)
         {
             uint8_t x = oneWire.readUint8();
@@ -70,19 +71,19 @@ extern "C" {
         //serial.print("Hello UART from esp!\n");
         //serial.print("And second line!\n");
 
-        //bus = new iotlib::I2CBus(iotlib::esp8266::I2C_Bus0, iotlib::esp8266::I2C_SDA_GPIO4, iotlib::esp8266::I2C_SCL_GPIO5);
-        //iotlib::SPIBus* bus = new iotlib::SPIBus(iotlib::esp8266::SPI_BusHSPI);
-        //iotlib::BME280* bme280 = new iotlib::BME280(*bus, iotlib::esp8266::GPIO5);
+        //iotlib::I2CBus* bus = new iotlib::I2CBus(iotlib::esp8266::I2C_Bus0, iotlib::esp8266::I2C_SDA_GPIO4, iotlib::esp8266::I2C_SCL_GPIO5);
+        iotlib::SPIBus* bus = new iotlib::SPIBus(iotlib::esp8266::SPI_BusHSPI);
+        iotlib::BME280* bme280 = new iotlib::BME280(*bus, iotlib::esp8266::GPIO5);
 
         
-        /*while (1)
+        while (1)
         {
             iotlib::BME280::Result data;
             bme280->getData(data);
 
             ESP_LOGI("main", "bme temp hum press: %d %d %d", data.Temperature, data.Humidity, data.Pressure);
             iotlib::System::sleep(2000);
-        }*/
+        }
     }
 }
 

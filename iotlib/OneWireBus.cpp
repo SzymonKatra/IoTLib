@@ -60,26 +60,46 @@ namespace iotlib
         return sample;
     }
 
-    void OneWireBus::writeUint8(uint8_t value)
+    size_t OneWireBus::searchRom(uint64_t* array, size_t size)
     {
-        for (size_t i = 0; i < 8; i++)
-        {
-            this->write(value & 1);
-            value >>= 1;
-        }
+        if (!this->reset()) return 0;
+
+        this->writeData(0xF0);
+        
+        // TODO
+        return 0;
     }
 
-    uint8_t OneWireBus::readUint8()
+    uint64_t OneWireBus::readRom()
     {
-        uint8_t value = 0;
-        for (size_t i = 0; i < 8; i++)
-        {
-            if (this->read())
-            {
-                value |= (1 << i);
-            }
-        }
+        if (!this->reset()) return 0;
 
-        return value;
+        this->writeData<uint8_t>(0x33);
+        return this->readData<uint64_t>();
+    }
+
+    void OneWireBus::matchRom(uint64_t address)
+    {
+        if (!this->reset()) return;
+
+        this->writeData<uint8_t>(0x55);
+        this->writeData<uint64_t>(address);
+    }
+
+    void OneWireBus::skipRom()
+    {
+        if (!this->reset()) return;
+
+        this->writeData<uint8_t>(0xCC);
+    }
+
+    size_t OneWireBus::alarmSearch(uint64_t* array, size_t size)
+    {
+        if (!this->reset()) return 0;
+
+        this->writeData<uint8_t>(0xEC);
+        
+        // TODO
+        return 0;
     }
 }

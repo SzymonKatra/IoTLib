@@ -1,10 +1,10 @@
 #pragma once
 
 #include <stdint.h>
-#include "I2CBus.hpp"
-#include "SPIBus.hpp"
-#include "Gpio.hpp"
-#include "Internal/BoschSensortecBME280_driver/bme280.h"
+#include "../I2CBus.hpp"
+#include "../SPIBus.hpp"
+#include "../Gpio.hpp"
+#include "../Internal/BoschSensortecBME280_driver/bme280.h"
 
 namespace iotlib
 {
