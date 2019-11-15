@@ -36,6 +36,7 @@ extern "C" {
         iotlib::OneWireBus oneWire(iotlib::esp8266::GPIO4);
         iotlib::DS18B20 tempSensor(oneWire);
         iotlib::System::sleep(100);
+        iotlib::Adc adc(iotlib::esp8266::ADC_TOUT);
         while (1)
         {
             tempSensor.startConversion();
@@ -47,6 +48,9 @@ extern "C" {
 
             bool isParasite = iotlib::DS18B20::isAnyUsingParasitePower(oneWire);
             ESP_LOGI("1w", "is parasite: %d", (int)isParasite);
+
+            uint16_t adcr = adc.read();
+            ESP_LOGI("adc", "%d", adcr);
         }
         /*for (size_t i = 0; i < 9; i++)
         {

@@ -5,4 +5,5 @@
 #include "SPIBus.hpp"
 #include "UARTPort.hpp"
 #include "OneWireBus.hpp"
+#include "Adc.hpp"
 #include "System.hpp"
