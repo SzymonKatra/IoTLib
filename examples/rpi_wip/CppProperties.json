@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "RPi",
+      "defines": [ "IOTLIB_RPI" ],
+      "includePath": [
+        "${workspaceRoot}",
+        "${workspaceRoot}/build/include",
+        "C:/rpi_includes",
+        "C:/rpi_includes/arm-linux-gnueabihf",
+        "C:/rpi_includes/c++/8"
+      ],
+      "intelliSenseMode": "linux-gcc-arm",
+    }
+  ]
+}
