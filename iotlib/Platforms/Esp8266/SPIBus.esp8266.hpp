@@ -23,7 +23,7 @@ namespace iotlib
         SPIBus(SPIBusDefinition bus);
         ~SPIBus();
 
-        void write(const uint8_t* data, size_t len);
-        void read(uint8_t* data, size_t len);
+        void write(const uint8_t* data, size_t length);
+        void read(uint8_t* data, size_t length);
     };
 }

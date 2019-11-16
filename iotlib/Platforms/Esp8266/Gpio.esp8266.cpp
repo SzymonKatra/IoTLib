@@ -4,17 +4,8 @@
 namespace iotlib
 {
     Gpio::Gpio(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction)
-        : pin(pin)
+        : Gpio(pin, direction, false)
     {
-        if (pin == esp8266::GPIO_NONE) return;
-
-        gpio_config_t io_conf;
-        io_conf.intr_type = GPIO_INTR_DISABLE;
-        io_conf.mode = Gpio::convertDirection(direction);
-        io_conf.pin_bit_mask = (1 << pin);
-        io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-        gpio_config(&io_conf);
     }
 
     Gpio::Gpio(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction, bool initValue)
@@ -31,6 +22,10 @@ namespace iotlib
         io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
         io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
         gpio_config(&io_conf);
+    }
+
+    Gpio::~Gpio()
+    {
     }
 
     void Gpio::write(bool value)

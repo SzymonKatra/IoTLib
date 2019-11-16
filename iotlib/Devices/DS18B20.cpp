@@ -3,7 +3,7 @@
 namespace iotlib
 {
     DS18B20::DS18B20(OneWireBus& bus)
-        : DS18B20(bus, OneWireBus::Address(0))
+        : DS18B20(bus, OneWireBus::NoDevice)
     {
     }
 
@@ -40,7 +40,7 @@ namespace iotlib
 
     void DS18B20::selectDevice()
     {
-        if (this->address.Value != 0)
+        if (this->address != OneWireBus::NoDevice)
         {
             this->bus.matchRom(this->address);
         }

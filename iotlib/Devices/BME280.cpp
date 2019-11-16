@@ -1,5 +1,8 @@
 #include "BME280.hpp"
 #include "../System.hpp"
+#include <stdlib.h>
+#include <string.h>
+#include <esp_log.h>
 
 namespace iotlib
 {
@@ -114,10 +117,17 @@ namespace iotlib
         }
         else
         {
+            //ESP_LOGI("BME280", "READ, reg_addr = %02X, len = %d", reg_addr, len);
+
             csGpio.write(false);
             this->spiBus->write(&reg_addr, 1);
             this->spiBus->read(reg_data, len);
             csGpio.write(true);
+
+            /*for (size_t i = 0; i < len; i++)
+            {
+                ESP_LOGI("BME280", "%d: %02X", i, reg_data[i]);
+            }*/
         }
         // todo: error handling
 
@@ -135,6 +145,12 @@ namespace iotlib
         }
         else
         {
+            /*ESP_LOGI("BME280", "WRITE, reg_addr = %02X, len = %d", reg_addr, len);
+            for (size_t i = 0; i < len; i++)
+            {
+                ESP_LOGI("BME280", "%d: %02X", i, reg_data[i]);
+            }*/
+
             csGpio.write(false);
             this->spiBus->write(&reg_addr, 1);
             this->spiBus->write(reg_data, len);

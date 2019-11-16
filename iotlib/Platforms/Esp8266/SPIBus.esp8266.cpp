@@ -11,6 +11,8 @@ namespace iotlib
     {
         spi_config_t config;
         config.interface.val = SPI_DEFAULT_INTERFACE;
+        config.interface.byte_rx_order = SPI_BYTE_ORDER_LSB_FIRST;
+        config.interface.byte_tx_order = SPI_BYTE_ORDER_LSB_FIRST;
         config.intr_enable.val = SPI_MASTER_DEFAULT_INTR_ENABLE;
         config.mode = SPI_MASTER_MODE;
         config.clk_div = SPI_5MHz_DIV;
@@ -24,93 +26,54 @@ namespace iotlib
         spi_deinit(this->bus);
     }
 
-    void SPIBus::write(const uint8_t* data, size_t len)
+    void SPIBus::write(const uint8_t* data, size_t length)
     {
-        size_t u32Len = len / 4;
-        if (len % 4) u32Len++;
-        size_t tlen = u32Len * 4;
-        uint8_t* buff = (uint8_t*)malloc(tlen);
-        memcpy(buff, data, len);
-        if (tlen - len > 0)
+        uint32_t* buffer = NULL;
+
+        if (length % 4)
         {
-            memset(buff + len, 0, tlen - len);
+            size_t u32Count = (length / 4) + 1;
+            size_t totalLength = u32Count * 4;
+
+            buffer = (uint32_t*)malloc(totalLength);
+            memcpy(buffer, data, length);
         }
 
         spi_trans_t trans = {};
-        trans.mosi = (uint32_t*)buff;
-        trans.bits.mosi = len * 8;
-        esp_err_t e = spi_trans(this->bus, trans);
-        ESP_LOGI("Spi", "write = %d", e);
+        trans.mosi = buffer != NULL ? buffer : (uint32_t*)data;
+        trans.bits.mosi = length * 8;
 
-        free(buff);
+        spi_trans(this->bus, trans);
 
-        //while (len)
-        //{
-        //    uint32_t buf = (*data) << 24;
-        //    data++;
-        //    len--;
-
-        //    spi_trans_t trans = {};
-        //    trans.mosi = &buf;
-        //    trans.bits.mosi = 8;
-        //    esp_err_t e = spi_trans(this->bus, trans);
-        //    ESP_LOGI("Spi", "write = %d", e);
-        //    /*uint16_t cmd = SPI_MASTER_WRITE_DATA_TO_SLAVE_CMD;
-        //    uint32_t addr = 0;
-        //    trans.cmd = &cmd;
-        //    trans.addr = &addr;
-        //    trans.mosi = (uint32_t*)data;
-        //    trans.bits.cmd = 8 * 1;
-        //    trans.bits.addr = 0;
-        //    trans.bits.mosi = len * 8;
-        //    trans.bits.miso = 0;*/
-
-        //    //spi_trans(this->bus, trans);
-        //}
+        if (buffer != NULL)
+        {
+            free(buffer);
+        }
         
     }
-    void SPIBus::read(uint8_t* data, size_t len)
+    void SPIBus::read(uint8_t* data, size_t length)
     {
-        size_t u32Len = len / 4;
-        if (len % 4) u32Len++;
-        size_t tlen = u32Len * 4;
-        uint8_t* buff = (uint8_t*)malloc(tlen);
+        uint32_t* buffer = NULL;
+
+        if (length % 4)
+        {
+            size_t u32Count = (length / 4) + 1;
+            size_t totalLength = u32Count * 4;
+
+            buffer = (uint32_t*)malloc(totalLength);
+        }
 
         spi_trans_t trans = {};
-        trans.miso = (uint32_t*)buff;
-        trans.bits.miso = len * 8;
-        esp_err_t e = spi_trans(this->bus, trans);
-        ESP_LOGI("Spi", "read = %d", e);
-        memcpy(data, buff, len);
+        trans.miso = buffer != NULL ? buffer : (uint32_t*)data;
+        trans.bits.miso = length * 8;
 
-        free(buff);
+        spi_trans(this->bus, trans);
 
-        /*while (len)
+        if (buffer != NULL)
         {
-            uint32_t buf;
-
-            spi_trans_t trans = {};
-            trans.miso = &buf;
-            trans.bits.miso = 8;
-            esp_err_t e = spi_trans(this->bus, trans);
-            ESP_LOGI("Spi", "read = %d", e);
-
-            *data = (uint8_t)(buf >> 24);
-            data++;
-            len--;
-        }*/
-
-        /*spi_trans_t trans;
-        uint16_t cmd = SPI_MASTER_READ_DATA_FROM_SLAVE_CMD;
-        uint32_t addr = 0;
-        trans.cmd = &cmd;
-        trans.addr = &addr;
-        trans.miso = (uint32_t*)data;
-        trans.bits.cmd = 8 * 1;
-        trans.bits.addr = 0;
-        trans.bits.mosi = 0;
-        trans.bits.miso = len * 8;
-        
-        spi_trans(this->bus, trans);*/
+            memcpy(data, buffer, length);
+            free(buffer);
+        }
+    }
     }
 }
