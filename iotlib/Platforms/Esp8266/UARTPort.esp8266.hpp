@@ -28,7 +28,6 @@ namespace iotlib
         enum class StopBits
         {
             One,
-            OneAndHalf,
             Two
         };
 

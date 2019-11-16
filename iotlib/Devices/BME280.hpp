@@ -66,7 +66,7 @@ namespace iotlib
     private:
         I2CBus* i2cBus;
         SPIBus* spiBus;
-        Gpio* csGpio;
+        Gpio csGpio;
         uint8_t address;
         struct bme280_dev device;
         uint8_t iotlibId;   

@@ -35,10 +35,10 @@ namespace iotlib
         I2CBus(I2CBusDefinition bus, I2CSdaPinDefinition sdaPin, I2CSclPinDefinition sclPin);
         ~I2CBus();
 
-        void write(uint8_t address, const uint8_t* data, size_t length, bool checkAck = true);
-        void read(uint8_t address, uint8_t* data, size_t length, ReadAckMode ackMode, bool checkAddressAck = true);
+        void write(uint8_t address, const uint8_t* data, size_t length);
+        void read(uint8_t address, uint8_t* data, size_t length);
 
-        void beginWrite(uint8_t address, bool checkAck = true);
+        void beginWrite(uint8_t address);
         void write(const uint8_t* data, size_t length);
         void endWrite();
 

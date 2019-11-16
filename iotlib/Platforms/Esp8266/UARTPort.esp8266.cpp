@@ -75,7 +75,6 @@ namespace iotlib
         switch (stopBits)
         {
         case UARTPort::StopBits::One: return UART_STOP_BITS_1;
-        case UARTPort::StopBits::OneAndHalf: return UART_STOP_BITS_1_5;
         case UARTPort::StopBits::Two: return UART_STOP_BITS_2;
         default: return UART_STOP_BITS_MAX;
         }

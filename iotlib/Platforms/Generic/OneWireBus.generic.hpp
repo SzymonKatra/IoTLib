@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Gpio.hpp"
+#include "../../Gpio.hpp"
 #include <stdint.h>
+#include <stddef.h>
 
 namespace iotlib
 {

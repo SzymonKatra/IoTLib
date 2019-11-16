@@ -1,15 +1,35 @@
 #include <string>
 #include <fstream>
 #include "Gpio.rpi.hpp"
+#include "bcm2835.h"
 
 namespace iotlib
 {
-    Gpio::Gpio(GpioPinDefinition pin, Direction direction)
-        : pin(pin)
+    Gpio::Gpio(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction)
+        : Gpio(pin, direction, false)
     {
-        std::ofstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/direction");
-        stream << (direction == Direction::Output ? "out" : "in");
-        stream.close();
+    }
+
+    Gpio::Gpio(iotlib::GpioPinDefinition pin, iotlib::Gpio::Direction direction, bool initValue)
+        : pin(pin), direction(direction)
+    {
+        if (direction == Direction::OutputOpenDrain)
+        {
+            bcm2835_gpio_clr(this->pin);
+            if (initValue)
+            {
+                bcm2835_gpio_fsel(pin, BCM2835_GPIO_FSEL_INPT);
+            }
+            else
+            {
+                bcm2835_gpio_fsel(pin, BCM2835_GPIO_FSEL_OUTP);
+            }
+        }
+        else
+        {
+            this->write(initValue);
+            bcm2835_gpio_fsel(pin, this->convertDirection(direction));
+        }
     }
 
     Gpio::~Gpio()
@@ -18,16 +38,42 @@ namespace iotlib
 
     void Gpio::write(bool value)
     {
-        std::ofstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/value");
-        stream << (value ? "1" : "0");
-        stream.close();
+        if (this->direction == Direction::OutputOpenDrain)
+        {
+            if (value)
+            {
+                bcm2835_gpio_fsel(pin, BCM2835_GPIO_FSEL_INPT);
+            }
+            else
+            {
+                bcm2835_gpio_fsel(pin, BCM2835_GPIO_FSEL_OUTP);
+            }
+        }
+        else
+        {
+            bcm2835_gpio_write(this->pin, value);
+        }
     }
 
     bool Gpio::read()
     {
-        std::string val;
-        std::ifstream stream("/sys/class/gpio/gpio" + std::to_string(pin) + "/value");
-        stream >> val;
-        return val == "1";
+        return bcm2835_gpio_lev(this->pin);
+    }
+
+    bcm2835FunctionSelect Gpio::convertDirection(Direction direction)
+    {
+        switch (direction)
+        {
+        case Direction::Input: return BCM2835_GPIO_FSEL_INPT;
+        case Direction::Output:
+        case Direction::OutputOpenDrain:
+            return BCM2835_GPIO_FSEL_OUTP;
+        }
+    }
+
+
+    Gpio Gpio::createDummy()
+    {
+        return Gpio(rpi::GPIO_NONE, iotlib::Gpio::Direction::Input);
     }
 }

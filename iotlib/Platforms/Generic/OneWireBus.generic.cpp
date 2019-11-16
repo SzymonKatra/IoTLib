@@ -1,7 +1,6 @@
-#include "OneWireBus.hpp"
+#include "OneWireBus.generic.hpp"
 
-#include "System.hpp"
-#include <esp_log.h>
+#include "../../System.hpp"
 
 namespace iotlib
 {
