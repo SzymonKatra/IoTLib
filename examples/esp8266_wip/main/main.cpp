@@ -113,15 +113,20 @@ extern "C" {
         //iotlib::I2CBus* bus = new iotlib::I2CBus(iotlib::esp8266::I2C_Bus0, iotlib::esp8266::I2C_SDA_GPIO4, iotlib::esp8266::I2C_SCL_GPIO5);
         iotlib::SPIBus* bus = new iotlib::SPIBus(iotlib::esp8266::SPI_BusHSPI);
         iotlib::BME280* bme280 = new iotlib::BME280(*bus, iotlib::esp8266::GPIO5);
+        iotlib::OneWireBus oneWire(iotlib::esp8266::GPIO4);
+        oneWire.searchBegin(iotlib::OneWireBus::SearchType::SearchRom);
+        iotlib::OneWireBus::Address dsAddr = oneWire.searchNext();
+        iotlib::DS18B20 tempDS(oneWire, dsAddr);
 
-        
         while (1)
         {
             iotlib::BME280::Result data;
             bme280->getData(data);
 
             ESP_LOGI("main", "bme temp hum press: %d %d %d", data.Temperature, data.Humidity, data.Pressure);
+            ESP_LOGI("main", "ds18b20 temp: %d", (tempDS.readRawTemperature() >> 4));
             iotlib::System::sleep(2000);
+            tempDS.startConversion();
         }
     }
 }

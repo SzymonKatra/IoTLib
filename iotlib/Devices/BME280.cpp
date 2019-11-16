@@ -118,7 +118,7 @@ namespace iotlib
         else
         {
             //ESP_LOGI("BME280", "READ, reg_addr = %02X, len = %d", reg_addr, len);
-
+            System::sleep(10); // why without this bme280 returns wrong results.. wtf?
             csGpio.write(false);
             this->spiBus->write(&reg_addr, 1);
             this->spiBus->read(reg_data, len);
