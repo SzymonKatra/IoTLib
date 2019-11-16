@@ -75,5 +75,4 @@ namespace iotlib
             free(buffer);
         }
     }
-    }
 }
