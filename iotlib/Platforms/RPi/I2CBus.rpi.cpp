@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "../../System.hpp"
+#include "bcm2835.h"
 
 namespace iotlib
 {

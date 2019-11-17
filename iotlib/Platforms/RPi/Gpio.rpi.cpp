@@ -64,7 +64,10 @@ namespace iotlib
     {
         switch (direction)
         {
-        case Direction::Input: return BCM2835_GPIO_FSEL_INPT;
+        default:
+        case Direction::Input:
+            return BCM2835_GPIO_FSEL_INPT;
+
         case Direction::Output:
         case Direction::OutputOpenDrain:
             return BCM2835_GPIO_FSEL_OUTP;

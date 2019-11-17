@@ -554,6 +554,8 @@
 
 #define BCM2835_VERSION 10060 /* Version 1.60 */
 
+#define BCM2835_NO_DELAY_COMPATIBILITY
+
 /* RPi 2 is ARM v7, and has DMB instruction for memory barriers.
    Older RPis are ARM v6 and don't, so a coprocessor instruction must be used instead.
    However, not all versions of gcc in all distros support the dmb assembler instruction even on conmpatible processors.

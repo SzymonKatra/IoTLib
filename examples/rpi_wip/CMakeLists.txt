@@ -39,6 +39,7 @@ file(GLOB SRC_FILES
     iotlib/*.cpp
     iotlib/Platforms/Generic/*.cpp
     iotlib/Platforms/RPi/*.cpp
+    iotlib/Platforms/RPi/*.c
     iotlib/Internal/BoschSensortecBME280_driver/*.c
     iotlib/Devices/*.cpp
 )
