@@ -38,6 +38,11 @@ namespace iotlib
         return result;
     }
 
+    const OneWireBus::Address& DS18B20::getAddress()
+    {
+        return this->address;
+    }
+
     void DS18B20::selectDevice()
     {
         if (this->address != OneWireBus::NoDevice)
