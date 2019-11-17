@@ -6,13 +6,6 @@
 
 namespace iotlib
 {
-    void System::initialize()
-    {
-    }
-    void System::finalize()
-    {
-    }
-
     void System::sleep(uint32_t milliseconds)
     {
         vTaskDelay(milliseconds / portTICK_PERIOD_MS);

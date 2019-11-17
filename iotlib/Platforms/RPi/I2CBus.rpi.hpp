@@ -8,7 +8,7 @@ namespace iotlib
     namespace rpi
     {
         typedef int I2CBusDefinition;
-        const I2CBusDefinition I2C_Bus1 = 1;
+        const I2CBusDefinition I2C_Bus0 = 0;
 
         typedef int I2CSdaPinDefinition;
         const I2CSdaPinDefinition I2C_SDA_GPIO2 = 0;
@@ -41,8 +41,5 @@ namespace iotlib
         void beginWrite(uint8_t address);
         void write(const uint8_t* data, size_t length);
         void endWrite();
-
-    private:
-        void selectDevice(uint8_t address);
     };
 }

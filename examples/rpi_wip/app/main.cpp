@@ -1,14 +1,13 @@
-#include <iotlib/UARTPort.hpp>
-#include <iotlib/Gpio.hpp>
-#include <iotlib/System.hpp>
+#include <iotlib/IoTLib.hpp>
 #include <iotlib/OneWireBus.hpp>
 #include <iotlib/Devices/DS18B20.hpp>
+#include <iotlib/Devices/BME280.hpp>
 #include <iostream>
+
+iotlib::Library libGlobal;
 
 int main()
 {
-    iotlib::System::initialize();
-
     //iotlib::UARTPort uart(iotlib::rpi::UART_Primary, 9600, iotlib::UARTPort::Parity::None, iotlib::UARTPort::StopBits::One);
     //std::cout << "uart created" << std::endl;
     //uart.print("test");
@@ -24,6 +23,13 @@ int main()
     gpio.write(true);
     iotlib::System::waitUs(100);
     gpio.write(false);*/
+    
+    iotlib::I2CBus i2c(iotlib::rpi::I2C_Bus0, iotlib::rpi::I2C_SDA_GPIO2, iotlib::rpi::I2C_SCL_GPIO3);
+    iotlib::BME280 bme(i2c);
+    iotlib::System::sleep(2000);
+    iotlib::BME280::Result res;
+    bme.getData(res);
+    std::cout << res.Temperature << std::endl;
 
     iotlib::OneWireBus oneWire(iotlib::rpi::GPIO4);
     oneWire.searchBegin(iotlib::OneWireBus::SearchType::SearchRom);
@@ -33,8 +39,6 @@ int main()
     iotlib::System::sleep(2000);
     int16_t result = temp.readRawTemperature();
     std::cout << (result >> 4) << std::endl;
-
-    iotlib::System::finalize();
 
     return 0;
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Library.hpp"
 #include "Gpio.hpp"
 #include "I2CBus.hpp"
 #include "SPIBus.hpp"

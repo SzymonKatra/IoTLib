@@ -5,15 +5,6 @@
 
 namespace iotlib
 {
-    void System::initialize()
-    {
-        bcm2835_init();
-    }
-    void System::finalize()
-    {
-        bcm2835_close();
-    }
-
     void System::sleep(uint32_t milliseconds)
     {
         bcm2835_delay(milliseconds);
