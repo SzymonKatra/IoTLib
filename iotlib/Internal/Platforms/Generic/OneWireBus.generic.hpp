@@ -1,11 +1,13 @@
 #pragma once
 
-#include "../../Gpio.hpp"
+#include "../../../Gpio.hpp"
 #include <stdint.h>
 #include <stddef.h>
 
 namespace iotlib
 {
+    typedef GpioPinDefinition OneWireBusDefinition;
+
     class OneWireBus
     {
     public:
@@ -41,7 +43,7 @@ namespace iotlib
         int8_t lastDiscrepancy;
 
     public:
-        OneWireBus(GpioPinDefinition busPin);
+        OneWireBus(OneWireBusDefinition oneWireGpioPin);
         ~OneWireBus();
 
         bool reset();

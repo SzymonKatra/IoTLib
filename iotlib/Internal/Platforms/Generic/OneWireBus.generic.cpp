@@ -1,6 +1,6 @@
 #include "OneWireBus.generic.hpp"
 
-#include "../../System.hpp"
+#include "../../../System.hpp"
 
 namespace iotlib
 {
@@ -24,8 +24,8 @@ namespace iotlib
 
     OneWireBus::Address OneWireBus::NoDevice = OneWireBus::Address(0);
 
-    OneWireBus::OneWireBus(GpioPinDefinition busPin)
-        : busGpio(busPin, Gpio::Direction::OutputOpenDrain, true)
+    OneWireBus::OneWireBus(OneWireBusDefinition oneWireGpioPin)
+        : busGpio(oneWireGpioPin, Gpio::Direction::OutputOpenDrain, true)
     {
     }
 
