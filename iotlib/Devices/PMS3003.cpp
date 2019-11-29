@@ -2,9 +2,9 @@
 
 namespace iotlib
 {
-    const uint8_t StartChar1 = 0x42;
-    const uint8_t StartChar2 = 0x4D;
-    const size_t FrameLen = 20;
+    const uint8_t START_CHAR_1 = 0x42;
+    const uint8_t START_CHAR_2 = 0x4D;
+    const size_t FRAME_LEN = 20;
 
     PMS3003::PMS3003(UARTPort& port)
         : port(port)
@@ -18,18 +18,18 @@ namespace iotlib
 
     PMS3003::ErrorCode PMS3003::read(Data* result)
     {
-        uint8_t buffer[FrameLen + 4];
+        uint8_t buffer[FRAME_LEN + 4];
         uint8_t* bufferPtr = buffer;
 
         if (this->port.read(bufferPtr, 1) != 1) return ErrorCode::UartError;
-        if (*bufferPtr != StartChar1) return ErrorCode::InvalidStartChar;
+        if (*bufferPtr != START_CHAR_1) return ErrorCode::InvalidStartChar;
         bufferPtr++;
 
         if (this->port.read(bufferPtr, 1) != 1) return ErrorCode::UartError;
-        if (*bufferPtr != StartChar2) return ErrorCode::InvalidStartChar;
+        if (*bufferPtr != START_CHAR_2) return ErrorCode::InvalidStartChar;
         bufferPtr++;
 
-        size_t remaining = FrameLen + 2;
+        size_t remaining = FRAME_LEN + 2;
         while (remaining > 0)
         {
             size_t read = this->port.read(bufferPtr, remaining);
@@ -39,7 +39,7 @@ namespace iotlib
         }
 
         uint16_t frameLength = (buffer[2] << 8) | buffer[3]; // Frame length
-        if (frameLength != FrameLen) return ErrorCode::InvalidFrameLength;
+        if (frameLength != FRAME_LEN) return ErrorCode::InvalidFrameLength;
 
         result->PM1Indoor = (buffer[4] << 8) | buffer[5]; // Data 1
         result->PM2_5Indoor = (buffer[6] << 8) | buffer[7]; // Data 2

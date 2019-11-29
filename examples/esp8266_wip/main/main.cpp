@@ -11,6 +11,7 @@
 #include <iotlib/Devices/DS18B20.hpp>
 #include <iotlib/Devices/MCP9700.hpp>
 #include <iotlib/Devices/PMS3003.hpp>
+#include <iotlib/Devices/HD44780.hpp>
 #include <sys/time.h>
 
 //iotlib::I2CBus* bus;
@@ -110,8 +111,26 @@ extern "C" {
         //serial.print("Hello UART from esp!\n");
         //serial.print("And second line!\n");
 
-        //iotlib::I2CBus* bus = new iotlib::I2CBus(iotlib::esp8266::I2C_Bus0, iotlib::esp8266::I2C_SDA_GPIO4, iotlib::esp8266::I2C_SCL_GPIO5);
-        iotlib::SPIBus* bus = new iotlib::SPIBus(iotlib::esp8266::SPI_BusHSPI);
+        iotlib::I2CBus* bus = new iotlib::I2CBus(iotlib::esp8266::I2C_Bus0, iotlib::esp8266::I2C_SDA_GPIO4, iotlib::esp8266::I2C_SCL_GPIO5);
+        iotlib::HD44780 lcd(*bus, 0x27);
+        uint8_t customch[8] = { 0xFF, 0x0E, 0x15, 0x10, 0x10, 0x11, 0x0E, 0x00 };
+        lcd.text("test lcd");
+        
+        iotlib::System::sleep(2000);
+        lcd.data('x');
+        lcd.defineChar(1, customch);
+        lcd.cursorGoTo(0, 1);
+        lcd.data(1);
+        lcd.data('y');
+
+        bool blink = true;
+        while (true)
+        {
+            iotlib::System::sleep(2000);
+            lcd.displayControl(true, false, blink);
+            blink = !blink;
+        }
+        /*iotlib::SPIBus* bus = new iotlib::SPIBus(iotlib::esp8266::SPI_BusHSPI);
         iotlib::BME280* bme280 = new iotlib::BME280(*bus, iotlib::esp8266::GPIO5);
         iotlib::OneWireBus oneWire(iotlib::esp8266::GPIO4);
         oneWire.searchBegin(iotlib::OneWireBus::SearchType::SearchRom);
@@ -127,7 +146,7 @@ extern "C" {
             ESP_LOGI("main", "ds18b20 temp: %d", (tempDS.readRawTemperature() >> 4));
             iotlib::System::sleep(2000);
             tempDS.startConversion();
-        }
+        }*/
     }
 }
 
