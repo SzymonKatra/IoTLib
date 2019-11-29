@@ -29,6 +29,8 @@ namespace iotlib
         void setResolution(Resolution resolution);
         int16_t readRawTemperature();
 
+        const OneWireBus::Address& getAddress();
+
         static bool isAnyUsingParasitePower(OneWireBus& bus);
         static void allStartConversion(OneWireBus& bus);
 

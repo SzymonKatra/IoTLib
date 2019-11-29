@@ -8,6 +8,7 @@ namespace iotlib
     namespace rpi
     {
         typedef int SPIBusDefinition;
+        const SPIBusDefinition SPI_Bus0 = 0;
     }
 
     typedef rpi::SPIBusDefinition SPIBusDefinition;
