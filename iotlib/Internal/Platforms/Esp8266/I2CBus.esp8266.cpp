@@ -68,4 +68,18 @@ namespace iotlib
         i2c_cmd_link_delete(this->currentWriteCmd);
         this->currentWriteCmd = NULL;
     }
+
+    bool I2CBus::isDevicePresent(uint8_t address)
+    {
+        i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+
+        i2c_master_start(cmd);
+        i2c_master_write_byte(cmd, address << 1, true);
+        i2c_master_stop(cmd);
+        esp_err_t e = i2c_master_cmd_begin(this->bus, cmd, 0);
+
+        i2c_cmd_link_delete(cmd);
+
+        return e == ESP_OK;
+    }
 }

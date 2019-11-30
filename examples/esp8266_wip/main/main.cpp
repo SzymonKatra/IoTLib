@@ -12,6 +12,7 @@
 #include <iotlib/Devices/MCP9700.hpp>
 #include <iotlib/Devices/PMS3003.hpp>
 #include <iotlib/Devices/HD44780.hpp>
+#include <iotlib/Devices/SSD1306.hpp>
 #include <sys/time.h>
 
 //iotlib::I2CBus* bus;
@@ -112,6 +113,12 @@ extern "C" {
         //serial.print("And second line!\n");
 
         iotlib::I2CBus* bus = new iotlib::I2CBus(iotlib::esp8266::I2C_Bus0, iotlib::esp8266::I2C_SDA_GPIO4, iotlib::esp8266::I2C_SCL_GPIO5);
+
+        ESP_LOGI("main", "hd44780 present: %d", bus->isDevicePresent(0x27));
+        ESP_LOGI("main", "ssd1306 present: %d", bus->isDevicePresent(0x3C));
+
+        iotlib::SSD1306 oled(*bus, 0x3C);
+
         iotlib::HD44780 lcd(*bus, 0x27);
         uint8_t customch[8] = { 0xFF, 0x0E, 0x15, 0x10, 0x10, 0x11, 0x0E, 0x00 };
         lcd.text("test lcd");

@@ -39,5 +39,7 @@ namespace iotlib
         void beginWrite(uint8_t address);
         void write(const uint8_t* data, size_t length);
         void endWrite();
+
+        bool isDevicePresent(uint8_t address);
     };
 }
