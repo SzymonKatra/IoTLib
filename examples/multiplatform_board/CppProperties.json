@@ -46,7 +46,19 @@
         "C:/esp8266_rtos/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/5.2.0/include",
         "C:/esp8266_rtos/xtensa-lx106-elf/xtensa-lx106-elf/include/c++/5.2.0"
       ],
-      "intelliSenseMode": "linux-gcc-arm",
+      "intelliSenseMode": "linux-gcc-arm"
+    },
+    {
+      "name": "RPi",
+      "defines": [ "IOTLIB_RPI", "IOTLIB_BOOTSTRAP" ],
+      "includePath": [
+        "${workspaceRoot}",
+        "${workspaceRoot}/build/include",
+        "C:/rpi_includes",
+        "C:/rpi_includes/arm-linux-gnueabihf",
+        "C:/rpi_includes/c++/8"
+      ],
+      "intelliSenseMode": "linux-gcc-arm"
     }
   ]
 }

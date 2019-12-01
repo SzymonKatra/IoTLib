@@ -1,7 +1,6 @@
 #include <string.h>
 #include <string>
 #include "I2CBus.rpi.hpp"
-#include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <math.h>
