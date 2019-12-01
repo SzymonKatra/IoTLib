@@ -38,6 +38,11 @@ namespace iotlib
         return result;
     }
 
+    int8_t DS18B20::readIntTemperature()
+    {
+        return this->readRawTemperature() >> 4;
+    }
+
     const OneWireBus::Address& DS18B20::getAddress()
     {
         return this->address;

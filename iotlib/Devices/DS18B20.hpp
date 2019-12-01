@@ -28,6 +28,7 @@ namespace iotlib
         void startConversion();
         void setResolution(Resolution resolution);
         int16_t readRawTemperature();
+        int8_t readIntTemperature();
 
         const OneWireBus::Address& getAddress();
 
