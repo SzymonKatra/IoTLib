@@ -62,4 +62,12 @@ namespace iotlib
         bcm2835_i2c_write((const char*)this->buffer, this->dataLength);
         free(this->buffer);
     }
+
+    bool I2CBus::isDevicePresent(uint8_t address)
+    {
+        bcm2835_i2c_setSlaveAddress(address);
+        uint8_t e = bcm2835_i2c_read(nullptr, 0);
+
+        return e == BCM2835_I2C_REASON_OK;
+    }
 }

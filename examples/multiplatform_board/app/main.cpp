@@ -10,38 +10,50 @@ int main()
 {
     iotlib::I2CBus i2c(app::I2CBus, app::I2CBus_SDA, app::I2CBus_SCL);
     iotlib::OneWireBus oneWire(app::OneWireBus);
-    //iotlib::UARTPort uart(app::UARTPort, 9600, iotlib::UARTPort::Parity::None, iotlib::UARTPort::StopBits::One);
+    iotlib::UARTPort uart(app::UARTPort, 9600, iotlib::UARTPort::Parity::None, iotlib::UARTPort::StopBits::One);
 
     iotlib::HD44780 lcd(i2c, app::HD44780_ADDRESS);
+    iotlib::DS18B20 tempProbe(oneWire);
+    iotlib::BME280 weatherSensor(i2c);
+    iotlib::PMS3003 smogSensor(uart);
+
+    tempProbe.startConversion();
+
     lcd.text(" *** IoTLib *** ");
     lcd.cursorGoTo(0, 1);
     lcd.text("  multiplatform ");
-
-    iotlib::OneWireBus::Address oneWireAddresses[3];
-    size_t tempSensorsCount = oneWire.search(iotlib::OneWireBus::SearchType::SearchRom, oneWireAddresses, 3);
-
-    iotlib::DS18B20::allStartConversion(oneWire);
     iotlib::System::sleep(2000);
 
-    char buffer[5][17];
+    char buffer[8][17];
+    uint8_t scroll = 0;
     while (true)
     {
-        lcd.clear();
+        int8_t probeTemp;
+        iotlib::BME280::Result weatherResult;
+        iotlib::PMS3003::Data smogResult;
+
+        probeTemp = tempProbe.readIntTemperature();
+        weatherSensor.getData(weatherResult);
+        smogSensor.read(smogResult);
+
+        tempProbe.startConversion();
+
         uint8_t line = 0;
-
-        for (size_t i = 0; i < tempSensorsCount; i++)
-        {
-            iotlib::DS18B20 tempSensor(oneWire, oneWireAddresses[i]);
-            sprintf(buffer[line], "T%d: %d \xDF""C", i + 1, tempSensor.readIntTemperature());
-            line++;
-        }
+        sprintf(buffer[line++], "Sonda T: %d \xDF""C", probeTemp);
+        *buffer[line++] = 0;
+        sprintf(buffer[line++], "Temp: %d \xDF""C", weatherResult.Temperature / 100);
+        sprintf(buffer[line++], "Wilg: %d%%", weatherResult.Humidity / 1024);
+        sprintf(buffer[line++], "Cisn: %d hPa", weatherResult.Pressure / (100 * 100));
+        sprintf(buffer[line++], "PM 1: %d", smogResult.PM1Outdoor);
+        sprintf(buffer[line++], "PM 2.5: %d", smogResult.PM2_5Outdoor);
+        sprintf(buffer[line++], "PM 10: %d", smogResult.PM10Outdoor);
 
         lcd.clear();
-        lcd.text(buffer[0]);
+        lcd.text(buffer[scroll % 8]);
         lcd.cursorGoTo(0, 1);
-        lcd.text(buffer[1]);
-        iotlib::System::sleep(1000);
+        lcd.text(buffer[(scroll + 1) % 8]);
 
-        iotlib::DS18B20::allStartConversion(oneWire);
+        scroll += 2;
+        iotlib::System::sleep(5000);
     }
 }

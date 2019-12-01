@@ -16,7 +16,7 @@ namespace iotlib
 
     }
 
-    PMS3003::ErrorCode PMS3003::read(Data* result)
+    PMS3003::ErrorCode PMS3003::read(Data& result)
     {
         uint8_t buffer[FRAME_LEN + 4];
         uint8_t* bufferPtr = buffer;
@@ -41,12 +41,12 @@ namespace iotlib
         uint16_t frameLength = (buffer[2] << 8) | buffer[3]; // Frame length
         if (frameLength != FRAME_LEN) return ErrorCode::InvalidFrameLength;
 
-        result->PM1Indoor = (buffer[4] << 8) | buffer[5]; // Data 1
-        result->PM2_5Indoor = (buffer[6] << 8) | buffer[7]; // Data 2
-        result->PM10Indoor = (buffer[8] << 8) | buffer[9]; // Data 3
-        result->PM1Outdoor = (buffer[10] << 8) | buffer[11]; // Data 4
-        result->PM2_5Outdoor = (buffer[12] << 8) | buffer[13]; // Data 5
-        result->PM10Outdoor = (buffer[14] << 8) | buffer[15]; // Data 6
+        result.PM1Indoor = (buffer[4] << 8) | buffer[5]; // Data 1
+        result.PM2_5Indoor = (buffer[6] << 8) | buffer[7]; // Data 2
+        result.PM10Indoor = (buffer[8] << 8) | buffer[9]; // Data 3
+        result.PM1Outdoor = (buffer[10] << 8) | buffer[11]; // Data 4
+        result.PM2_5Outdoor = (buffer[12] << 8) | buffer[13]; // Data 5
+        result.PM10Outdoor = (buffer[14] << 8) | buffer[15]; // Data 6
 
         uint16_t checksum = (buffer[22] << 8) | buffer[23]; // Data and check
 

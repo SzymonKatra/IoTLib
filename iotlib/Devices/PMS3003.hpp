@@ -40,6 +40,6 @@ namespace iotlib
         PMS3003(UARTPort& port);
         ~PMS3003();
 
-        ErrorCode read(Data* result);
+        ErrorCode read(Data& result);
     };
 }

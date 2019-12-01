@@ -103,8 +103,8 @@ namespace iotlib
         bme280_get_sensor_data(BME280_ALL, &data, &this->device);
 
         result.Temperature = data.temperature;
-        result.Humidity = result.Humidity;
-        result.Pressure = result.Pressure;
+        result.Humidity = data.humidity;
+        result.Pressure = data.pressure;
     }
 
     int8_t BME280::busRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
