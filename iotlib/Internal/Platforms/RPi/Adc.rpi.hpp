@@ -7,7 +7,7 @@ namespace iotlib
     namespace rpi
     {
         typedef int AdcPinDefinition;
-        // RPi does not have any ADC
+        const AdcPinDefinition ADC_NONE = -1;// RPi does not have any ADC
     }
 
     typedef rpi::AdcPinDefinition AdcPinDefinition;

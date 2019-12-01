@@ -3,6 +3,7 @@
 namespace app
 {
 #ifdef IOTLIB_ESP8266
+
     const iotlib::I2CBusDefinition I2CBus = iotlib::esp8266::I2C_Bus0;
     const iotlib::I2CSclPinDefinition I2CBus_SCL = iotlib::esp8266::I2C_SCL_GPIO5;
     const iotlib::I2CSclPinDefinition I2CBus_SDA = iotlib::esp8266::I2C_SDA_GPIO4;
@@ -19,7 +20,26 @@ namespace app
     const iotlib::GpioPinDefinition IO1 = iotlib::esp8266::GPIO2;
     const iotlib::GpioPinDefinition IO2 = iotlib::esp8266::GPIO9;
     const iotlib::GpioPinDefinition IO3 = iotlib::esp8266::GPIO10;
+
 #elif IOTLIB_RPI
+
+    const iotlib::I2CBusDefinition I2CBus = iotlib::rpi::I2C_Bus0;
+    const iotlib::I2CSclPinDefinition I2CBus_SCL = iotlib::rpi::I2C_SCL_GPIO3;
+    const iotlib::I2CSclPinDefinition I2CBus_SDA = iotlib::rpi::I2C_SDA_GPIO2;
+
+    const iotlib::SPIBusDefinition SPIBus = iotlib::rpi::SPI_Bus0;
+
+    const iotlib::OneWireBusDefinition OneWireBus = iotlib::rpi::GPIO4;
+
+    const iotlib::UARTPortDefinition UARTPort = iotlib::rpi::UART_Primary;
+
+    const iotlib::AdcPinDefinition ADC = iotlib::rpi::ADC_NONE;
+
+    const iotlib::GpioPinDefinition IO0 = iotlib::rpi::GPIO6;
+    const iotlib::GpioPinDefinition IO1 = iotlib::rpi::GPIO13;
+    const iotlib::GpioPinDefinition IO2 = iotlib::rpi::GPIO19;
+    const iotlib::GpioPinDefinition IO3 = iotlib::rpi::GPIO26;
+
 #else
     #error Platform not selected
 #endif
