@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <iotlib/IoTLib.hpp>
 #include <iotlib/Devices/HD44780.hpp>
 #include <iotlib/Devices/BME280.hpp>
