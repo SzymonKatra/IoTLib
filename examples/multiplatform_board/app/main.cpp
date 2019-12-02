@@ -55,6 +55,6 @@ int main()
         lcd.text(buffer[(scroll + 1) % 8]);
 
         scroll += 2;
-        iotlib::System::sleep(5000);
+        iotlib::System::sleep(1500);
     }
 }

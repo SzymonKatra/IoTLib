@@ -14,8 +14,6 @@ namespace iotlib
 
         struct termios options;
         tcgetattr(fd, &options);
-        //options.c_cflag = 0;
-        printf("%08X", options.c_cflag);
         options.c_cflag &= ~CSIZE;
         options.c_cflag |= CS8;
 
@@ -66,26 +64,5 @@ namespace iotlib
     void UARTPort::print(const char* str)
     {
         this->write((const uint8_t*)str, strlen(str));
-    }
-
-    tcflag_t UARTPort::convertParity(UARTPort::Parity parity)
-    {
-        switch (parity)
-        {
-        case UARTPort::Parity::None: return 0;
-        case UARTPort::Parity::Even: return PARENB;
-        case UARTPort::Parity::Odd: return PARENB | PARODD;
-        default: return 0;
-        }
-    }
-
-    tcflag_t UARTPort::convertStopBits(UARTPort::StopBits stopBits)
-    {
-        switch (stopBits)
-        {
-        case UARTPort::StopBits::One: return 0;
-        case UARTPort::StopBits::Two: return CSTOPB;
-        default: return 0;
-        }
     }
 }
