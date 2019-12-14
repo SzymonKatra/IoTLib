@@ -152,8 +152,6 @@ namespace iotlib
 
     size_t OneWireDevice::read(void* data, size_t length)
     {
-        this->selectDevice();
-
         if (length >= 8)
         {
             *(uint64_t*)data = this->oneWireBus.readData<uint64_t>();
