@@ -1,4 +1,3 @@
-#include "../Gpio.hpp"
 #include "../System.hpp"
 #include "../Device.hpp"
 

@@ -1,5 +1,4 @@
 #include "Adc.esp8266.hpp"
-#include <esp_log.h>
 
 namespace iotlib
 {
@@ -10,7 +9,6 @@ namespace iotlib
         config.mode = pin;
         config.clk_div = 8;
         esp_err_t e = adc_init(&config);
-        ESP_LOGI("adc_init", "%d", e);
     }
 
     Adc::~Adc()

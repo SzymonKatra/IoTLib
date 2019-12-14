@@ -3,18 +3,20 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "Gpio.hpp"
-#include "Adc.hpp"
-#include "I2CBus.hpp"
-#include "SPIBus.hpp"
-#include "UARTPort.hpp"
-#include "OneWireBus.hpp"
+#include "Hardware/Gpio.hpp"
+#include "Hardware/Adc.hpp"
+#include "Hardware/I2CBus.hpp"
+#include "Hardware/SPIBus.hpp"
+#include "Hardware/UARTPort.hpp"
+#include "Hardware/OneWireBus.hpp"
 
 namespace iotlib
 {
     class Device
     {
     public:
+        virtual ~Device();
+
         virtual size_t write(const void* data, size_t length) = 0;
         void write(uint8_t data);
 
@@ -63,9 +65,10 @@ namespace iotlib
     {
     private:
         SPIBus& spiBus;
+        Gpio& csPin;
 
     public:
-        SPIDevice(SPIBus& spiBus);
+        SPIDevice(SPIBus& spiBus, Gpio& csPin);
 
         virtual size_t write(const void* data, size_t length);
         virtual size_t read(void* data, size_t length);
@@ -90,7 +93,6 @@ namespace iotlib
         OneWireBus::Address address;
 
     public:
-        OneWireDevice(OneWireBus& oneWireBus);
         OneWireDevice(OneWireBus& oneWireBus, OneWireBus::Address address);
 
         virtual size_t write(const void* data, size_t length);

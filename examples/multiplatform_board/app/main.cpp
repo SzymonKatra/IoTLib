@@ -8,22 +8,23 @@
 #include "config.hpp"
 
 #include <iotlib/Device.hpp>
+#include <iotlib/DeviceManager.hpp>
 
 int main()
 {
+    // Hardware
     iotlib::I2CBus i2c(app::I2CBus, app::I2CBus_SDA, app::I2CBus_SCL);
     iotlib::OneWireBus oneWire(app::OneWireBus);
     iotlib::UARTPort uart(app::UARTPort, 9600, iotlib::UARTPort::Parity::None, iotlib::UARTPort::StopBits::One);
 
-    iotlib::I2CDevice lcdDevice(i2c, app::HD44780_ADDRESS);
-    iotlib::OneWireDevice tempProbeDevice(oneWire);
-    iotlib::I2CDevice weatherSensorDevice(i2c, app::BME280_ADDRESS);
-    iotlib::UARTDevice smogSensorDevice(uart);
+    // Device manager
+    iotlib::DeviceManager deviceManager;
 
-    iotlib::HD44780 lcd(lcdDevice);
-    iotlib::DS18B20 tempProbe(tempProbeDevice);
-    iotlib::BME280 weatherSensor(weatherSensorDevice);
-    iotlib::PMS3003 smogSensor(smogSensorDevice);
+    // Drivers
+    iotlib::HD44780 lcd(deviceManager.createI2CDevice(i2c, app::HD44780_ADDRESS));
+    iotlib::DS18B20 tempProbe(deviceManager.createOneWireDevice(oneWire));
+    iotlib::BME280 weatherSensor(deviceManager.createI2CDevice(i2c, app::BME280_ADDRESS));
+    iotlib::PMS3003 smogSensor(deviceManager.createUARTDevice(uart));
 
     tempProbe.startConversion();
 

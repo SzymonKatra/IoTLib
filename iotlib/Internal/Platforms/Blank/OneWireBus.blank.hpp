@@ -1,12 +1,16 @@
 #pragma once
 
-#include "../../../Hardware/Gpio.hpp"
 #include <stdint.h>
 #include <stddef.h>
 
 namespace iotlib
 {
-    typedef GpioPinDefinition OneWireBusDefinition;
+    namespace blank
+    {
+        typedef int OneWireBusDefinition;
+    }
+
+    typedef blank::OneWireBusDefinition OneWireBusDefinition;
 
     class OneWireBus
     {
@@ -36,12 +40,6 @@ namespace iotlib
             AlarmSearch = 0xEC
         };
 
-    private:
-        Gpio busGpio;
-        SearchType currentSearchType;
-        uint64_t lastDeviceAddress;
-        int8_t lastDiscrepancy;
-
     public:
         OneWireBus(OneWireBusDefinition oneWireGpioPin);
         ~OneWireBus();
@@ -53,26 +51,13 @@ namespace iotlib
         template<typename T>
         void writeData(T value)
         {
-            for (size_t i = 0; i < sizeof(T) * 8; i++)
-            {
-                this->write(value & 1);
-                value >>= 1;
-            }
+            #warning Not implemented!
         }
 
         template<typename T>
         T readData()
         {
-            T value = 0;
-            for (size_t i = 0; i < sizeof(T) * 8; i++)
-            {
-                if (this->read())
-                {
-                    value |= (1 << i);
-                }
-            }
-
-            return value;
+            #warning Not implemented!
         }
 
         void searchBegin(SearchType searchType);

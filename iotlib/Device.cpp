@@ -2,6 +2,10 @@
 
 namespace iotlib
 {
+    Device::~Device()
+    {
+    }
+
     void Device::write(uint8_t data)
     {
         this->write(&data, 1);
@@ -80,20 +84,26 @@ namespace iotlib
         return length;
     }
 
-    SPIDevice::SPIDevice(SPIBus& spiBus)
-        : spiBus(spiBus)
+    SPIDevice::SPIDevice(SPIBus& spiBus, Gpio& csPin)
+        : spiBus(spiBus), csPin(csPin)
     {
     }
 
     size_t SPIDevice::write(const void* data, size_t length)
     {
+        this->csPin.write(false);
         this->spiBus.write((const uint8_t*)data, length);
+        this->csPin.write(true);
+
         return length;
     }
 
     size_t SPIDevice::read(void* data, size_t length)
     {
+        this->csPin.write(false);
         this->spiBus.read((uint8_t*)data, length);
+        this->csPin.write(true);
+
         return length;
     }
 
@@ -110,11 +120,6 @@ namespace iotlib
     size_t UARTDevice::read(void* data, size_t length)
     {
         return this->uartPort.read((uint8_t*)data, length);
-    }
-
-    OneWireDevice::OneWireDevice(OneWireBus& oneWireBus)
-        : OneWireDevice(oneWireBus, OneWireBus::NoDevice)
-    {
     }
 
     OneWireDevice::OneWireDevice(OneWireBus& oneWireBus, OneWireBus::Address address)
