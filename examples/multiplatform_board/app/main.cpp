@@ -16,6 +16,7 @@ int main()
     iotlib::I2CBus i2c(app::I2CBus, app::I2CBus_SDA, app::I2CBus_SCL);
     iotlib::OneWireBus oneWire(app::OneWireBus);
     iotlib::UARTPort uart(app::UARTPort, 9600, iotlib::UARTPort::Parity::None, iotlib::UARTPort::StopBits::One);
+    iotlib::Gpio io0(app::IO0, iotlib::Gpio::Direction::Output);
 
     // Device manager
     iotlib::DeviceManager deviceManager;
@@ -25,6 +26,7 @@ int main()
     iotlib::DS18B20 tempProbe(deviceManager.createOneWireDevice(oneWire));
     iotlib::BME280 weatherSensor(deviceManager.createI2CDevice(i2c, app::BME280_ADDRESS));
     iotlib::PMS3003 smogSensor(deviceManager.createUARTDevice(uart));
+    iotlib::Device& ledDevice = deviceManager.createGpioDevice(io0);
 
     tempProbe.startConversion();
 
@@ -37,6 +39,8 @@ int main()
     uint8_t scroll = 0;
     while (true)
     {
+        ledDevice.write(ledDevice.read() == 0 ? 1 : 0);
+
         int8_t probeTemp;
         iotlib::BME280::Result weatherResult;
         iotlib::PMS3003::Data smogResult;

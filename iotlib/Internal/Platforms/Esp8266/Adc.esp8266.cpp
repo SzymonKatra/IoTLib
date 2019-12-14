@@ -8,7 +8,7 @@ namespace iotlib
         adc_config_t config;
         config.mode = pin;
         config.clk_div = 8;
-        esp_err_t e = adc_init(&config);
+        adc_init(&config);
     }
 
     Adc::~Adc()
