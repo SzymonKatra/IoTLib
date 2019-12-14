@@ -45,4 +45,5 @@ namespace app
 #endif
 
     const uint8_t HD44780_ADDRESS = 0x27;
+    const uint8_t BME280_ADDRESS = 0x76;
 }

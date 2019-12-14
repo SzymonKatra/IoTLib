@@ -1,9 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include "../I2CBus.hpp"
-#include "../SPIBus.hpp"
-#include "../Gpio.hpp"
+#include "../Device.hpp"
 #include "../Internal/BoschSensortecBME280_driver/bme280.h"
 
 namespace iotlib
@@ -64,16 +62,12 @@ namespace iotlib
         };
 
     private:
-        I2CBus* i2cBus;
-        SPIBus* spiBus;
-        Gpio csGpio;
-        uint8_t address;
+        Device& device;
         struct bme280_dev boschDriverDevice;
         uint8_t iotlibId;   
 
     public:
-        BME280(I2CBus& bus, uint8_t sdo = 0);
-        BME280(SPIBus& bus, GpioPinDefinition csPin);
+        BME280(Device& device);
         ~BME280();
 
         void setMode(Mode mode);

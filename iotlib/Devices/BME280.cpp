@@ -14,13 +14,13 @@ namespace iotlib
 
     namespace internal
     {
-        int8_t BME280PrivateAccessor::busRead(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+        int8_t BME280PrivateAccessor::deviceRead(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
         {
-            return bme280.busRead(reg_addr, reg_data, len);
+            return bme280.deviceRead(reg_addr, reg_data, len);
         }
-        int8_t BME280PrivateAccessor::busWrite(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+        int8_t BME280PrivateAccessor::deviceWrite(BME280& bme280, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
         {
-            return bme280.busWrite(reg_addr, reg_data, len);
+            return bme280.deviceWrite(reg_addr, reg_data, len);
         }
     }
 
@@ -37,13 +37,13 @@ namespace iotlib
 
         address = sdo == 0 ? BME280_I2C_ADDR_PRIM : BME280_I2C_ADDR_SEC;
 
-        this->device.dev_id = this->iotlibId;
-        this->device.intf = BME280_I2C_INTF;
-        this->device.read = bme280_read;
-        this->device.write = bme280_write;
-        this->device.delay_ms = bme280_delay_ms;
+        this->boschDriverDevice.dev_id = this->iotlibId;
+        this->boschDriverDevice.intf = BME280_I2C_INTF;
+        this->boschDriverDevice.read = bme280_read;
+        this->boschDriverDevice.write = bme280_write;
+        this->boschDriverDevice.delay_ms = bme280_delay_ms;
 
-        bme280_init(&this->device); // todo: error handling
+        bme280_init(&this->boschDriverDevice); // todo: error handling
 
         this->changeSettings(Oversampling::X1, Oversampling::X1, Oversampling::X1, FilterCoefficient::Disabled, StandbyTime::Ms20);
         this->setMode(Mode::Normal);
@@ -64,13 +64,13 @@ namespace iotlib
 
         //address = sdo == 0 ? BME280_I2C_ADDR_PRIM : BME280_I2C_ADDR_SEC;
 
-        this->device.dev_id = this->iotlibId;
-        this->device.intf = BME280_SPI_INTF;
-        this->device.read = bme280_read;
-        this->device.write = bme280_write;
-        this->device.delay_ms = bme280_delay_ms;
+        this->boschDriverDevice.dev_id = this->iotlibId;
+        this->boschDriverDevice.intf = BME280_SPI_INTF;
+        this->boschDriverDevice.read = bme280_read;
+        this->boschDriverDevice.write = bme280_write;
+        this->boschDriverDevice.delay_ms = bme280_delay_ms;
 
-        bme280_init(&this->device); // todo: error handling
+        bme280_init(&this->boschDriverDevice); // todo: error handling
 
         this->changeSettings(Oversampling::X1, Oversampling::X1, Oversampling::X1, FilterCoefficient::Disabled, StandbyTime::Ms20);
         this->setMode(Mode::Normal);
@@ -83,33 +83,33 @@ namespace iotlib
 
     void BME280::setMode(Mode mode)
     {
-        bme280_set_sensor_mode((uint8_t)mode, &this->device);
+        bme280_set_sensor_mode((uint8_t)mode, &this->boschDriverDevice);
     }
 
     void BME280::changeSettings(Oversampling temperatureOversampling, Oversampling pressureOversampling, Oversampling humidityOversampling, FilterCoefficient filterCoefficient, StandbyTime standbyTime)
     {
-        this->device.settings.osr_t = (uint8_t)temperatureOversampling;
-        this->device.settings.osr_h = (uint8_t)humidityOversampling;
-        this->device.settings.osr_p = (uint8_t)pressureOversampling;
-        this->device.settings.filter = (uint8_t)filterCoefficient;
-        this->device.settings.standby_time = (uint8_t)standbyTime;
-        bme280_set_sensor_settings(BME280_ALL_SETTINGS_SEL, &this->device);
+        this->boschDriverDevice.settings.osr_t = (uint8_t)temperatureOversampling;
+        this->boschDriverDevice.settings.osr_h = (uint8_t)humidityOversampling;
+        this->boschDriverDevice.settings.osr_p = (uint8_t)pressureOversampling;
+        this->boschDriverDevice.settings.filter = (uint8_t)filterCoefficient;
+        this->boschDriverDevice.settings.standby_time = (uint8_t)standbyTime;
+        bme280_set_sensor_settings(BME280_ALL_SETTINGS_SEL, &this->boschDriverDevice);
     }
 
 
     void BME280::getData(Result& result)
     {
         bme280_data data;
-        bme280_get_sensor_data(BME280_ALL, &data, &this->device);
+        bme280_get_sensor_data(BME280_ALL, &data, &this->boschDriverDevice);
 
         result.Temperature = data.temperature;
         result.Humidity = data.humidity;
         result.Pressure = data.pressure;
     }
 
-    int8_t BME280::busRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    int8_t BME280::deviceRead(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        if (this->device.intf == BME280_I2C_INTF)
+        if (this->boschDriverDevice.intf == BME280_I2C_INTF)
         {
             this->i2cBus->write(this->address, &reg_addr, 1);
             this->i2cBus->read(this->address, reg_data, len);
@@ -127,9 +127,9 @@ namespace iotlib
         return 0;
     }
 
-    int8_t BME280::busWrite(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
+    int8_t BME280::deviceWrite(uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
-        if (this->device.intf == BME280_I2C_INTF)
+        if (this->boschDriverDevice.intf == BME280_I2C_INTF)
         {
             this->i2cBus->beginWrite(this->address);
             this->i2cBus->write(&reg_addr, 1);
@@ -156,13 +156,13 @@ namespace iotlib
     int8_t bme280_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
         BME280* bme280 = instances[dev_id];
-        return internal::BME280PrivateAccessor::busRead(*bme280, reg_addr, reg_data, len);
+        return internal::BME280PrivateAccessor::deviceRead(*bme280, reg_addr, reg_data, len);
     }
 
     int8_t bme280_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
     {
         BME280* bme280 = instances[dev_id];
-        return internal::BME280PrivateAccessor::busWrite(*bme280, reg_addr, reg_data, len);
+        return internal::BME280PrivateAccessor::deviceWrite(*bme280, reg_addr, reg_data, len);
     }
 
     int8_t bme280_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
