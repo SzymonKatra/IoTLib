@@ -1,6 +1,6 @@
 # IoTLib
 
-Prototype of multiplatform library for embedded systems that allows to write portable code for handling sensors and other external peripherals.
+Prototype of multiplatform library for embedded systems that allows writing portable code for handling sensors and other external peripherals.
 
 Supported platforms:
 - [ESP8266](https://www.espressif.com/en/products/socs/esp8266)
