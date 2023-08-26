@@ -6,6 +6,13 @@ Supported platforms:
 - [ESP8266](https://www.espressif.com/en/products/socs/esp8266)
 - [Raspberry Pi](https://www.raspberrypi.org/)
 
+Supported peripherals:
+- Humidity, barometric and temperature sensor [BME280](https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/)
+- Digital temperature sensor **DS18B20**
+- LCD controller [HD44780](https://en.wikipedia.org/wiki/Hitachi_HD44780_LCD_controller)
+- Analog temperature sensor [MCP9700](https://www.microchip.com/en-us/product/mcp9700)
+- Smog sensor [PMS3003](https://www.plantower.com/en/products_33/73.html)
+
 ## Source code
 - `iotlib` directory - source code of the library,
 - `examples` directory - source code of example applications. 
