@@ -1,30 +1,39 @@
-## Kompilacja i uruchomienie
+# IoTLib
 
-### Ogólny opis
-Źródła biblioteki znajdują się w katalogu `iotlib`. Przykładowe projekty są umieszczone w katalogu `examples`
+Prototype of multiplatform library for embedded systems that allows to write portable code for handling sensors and other external peripherals.
+
+Supported platforms:
+- [ESP8266](https://www.espressif.com/en/products/socs/esp8266)
+- [Raspberry Pi](https://www.raspberrypi.org/)
+
+## Source code
+- `iotlib` directory - source code of the library,
+- `examples` directory - source code of example applications. 
+
+## Usage
 
 ### Raspberry Pi
-Wymagania:
+Requirements:
 - gcc, make, cmake
 
-1. Sklonować repozytorium
-2. Przejść do katalogu `examples/rpi_wip/`
-3. Uruchomić skrypt konfigurujący project `configure.sh`
-4. Przejść do katalogu `build/Debug` lub `build/Relase` i użyć `make` w celu skompilowania projektu.
+1. Clone repository
+2. `cd examples/rpi_wip/`
+3. `configure.sh`
+4.  cd build/Debug` or `cd build/Relase` and use `make` to compile the project.
 
 ### ESP8266
-Wymagania: 
-- PC z systemem Linux
-- ESP8266 RTOS SDK, do zainstalowania z https://github.com/espressif/ESP8266_RTOS_SDK
+Requirements: 
+- PC with Linux based OS
+- ESP8266 RTOS SDK, to be installed from https://github.com/espressif/ESP8266_RTOS_SDK
 - make
 
-1. Sklonować repozytorium
-2. Przejść do katalogu `examples/esp8266_wip`
-3. Podłączyć płytkę z ESP8266 do komputera (płytka musi mieć wbudowany konwerter USB-UART, w przeciwnym wypadku należy zastosować zewnętrzny)
-4. Uruchomić polecenie `make menuconfig` i wybrać port szeregowy.
-5. Uruchomić polecenie `make app-flash`. Przykładowy projekt zostanie zbudowany, a następnie wgrany na płytkę.
+1. Clone repository
+2. `cd examples/esp8266_wip`
+3. Connect ESP8266 board to PC (it must have built-it USB-UART converted, otherwise please use external one)
+4. `make menuconfig` and select serial port where your board is connected,
+5. `make app-flash`. Example project will be built and uploaded to the board.
 
-## Bibliografia 
+## References 
 
 - Microchip Technology Inc., Hardware Abstraction Layer - http://ww1.microchip.com/downloads/en/DeviceDoc/hardware-abstraction-layer.pdf
 - Jacob Beningo, 10 Tips for designing a HAL - https://www.edn.com/electronics-blogs/embedded-basics/4439613/10-Tips-for-designing-a-HAL
